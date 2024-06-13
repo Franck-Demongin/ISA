@@ -86,5 +86,26 @@ Like other chat systems, ISA understands your question, but prefers clear, preci
 
 For example, to generate 3 prompts you could ask:
 _Create 3 prompts about: a sporting car_
-I
 
+Occasionally, ISA hallucinates and answers incorrectly.  
+Don't hesitate to insist and ask her to try again. A simple word change in your request may be enough to get a correct answer.
+
+You can clear her _history_ to start a new discussion.
+
+The _Clear memory_ button clears the graphics memory of the models used by ISA.  
+This option makes it easy to switch from ISA to an image-generating UI like ComfyUI, even if you're short on resources (tested with 6 GB VRAM). 
+
+## Image analysis
+
+ISA can create prompts from a given image.  
+It uses the vision model to describe the image, then passes this description to the LLM responsible for generating the prompts.
+
+Load an image, select the vision model and ask your question. Redo the same image, use the style with a different subject, etc. ISA can be surprising!
+
+## Changelog
+
+### 0.2.0 - 2024-06-13
+__Changed:__
+- First public version of ISA
+
+__Fixed:__
