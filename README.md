@@ -33,7 +33,6 @@ Activate the virtual environmant:
 # Linux
 source .venv/bin/activae
 ```
-
 Install dependencies:
 ```:bash
 pip install -r requirements.txt
@@ -63,6 +62,8 @@ For the vison model, you can get a try to :
 - _llava-phi3_
 
 ## Usage
+
+![ISA_1](https://github.com/Franck-Demongin/ISA/assets/54265936/dc90a7fa-7946-4983-bcd5-e6d877ed25cb)
 
 To launch the WebUI, open a terminal in the ISA folder, activate the virtual environment and type:
 ```:bash
