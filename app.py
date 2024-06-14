@@ -15,8 +15,8 @@ VERSION = "0.2.0"
 
 PATH_OUTPUT = "output"
 PATH_POSTIVE = os.path.join(PATH_OUTPUT, "prompts_positive.txt")
-PATH_NEGATIVE = "output/prompts_negative.txt"
-PATH_BACKUP = "output/prompts_backup.txt"
+PATH_NEGATIVE = os.path.join(PATH_OUTPUT, "prompts_negative.txt")
+PATH_BACKUP = os.path.join(PATH_OUTPUT, "prompts_backup.txt")
 
 @st.cache_data
 def get_models_list() -> List[str]:

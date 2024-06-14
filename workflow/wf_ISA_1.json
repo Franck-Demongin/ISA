@@ -1,0 +1,1777 @@
+{
+  "last_node_id": 15,
+  "last_link_id": 15,
+  "nodes": [
+    {
+      "id": 6,
+      "type": "CLIPTextEncode",
+      "pos": [
+        410,
+        290
+      ],
+      "size": {
+        "0": 210,
+        "1": 50
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 3
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 13,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            4
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "beautiful scenery nature glass bottle landscape, , purple galaxy bottle,"
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 7,
+      "type": "CLIPTextEncode",
+      "pos": [
+        410,
+        390
+      ],
+      "size": {
+        "0": 210,
+        "1": 50
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 5
+        },
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 14,
+          "widget": {
+            "name": "text"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            6
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "text, watermark"
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 4,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -20,
+        220
+      ],
+      "size": {
+        "0": 370,
+        "1": 100
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            3,
+            5
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            10
+          ],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "pixelAlchemy_v13.safetensors"
+      ]
+    },
+    {
+      "id": 11,
+      "type": "Reroute",
+      "pos": [
+        1110,
+        140
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "VAE",
+          "links": [
+            12
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 10,
+      "type": "Reroute",
+      "pos": [
+        410,
+        140
+      ],
+      "size": [
+        75,
+        26
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "",
+          "type": "*",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "VAE",
+          "links": [
+            11
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "showOutputText": false,
+        "horizontal": false
+      }
+    },
+    {
+      "id": 3,
+      "type": "KSampler",
+      "pos": [
+        870,
+        220
+      ],
+      "size": {
+        "0": 320,
+        "1": 260
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 4
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 6
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            7
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        156680208700286,
+        "randomize",
+        20,
+        8,
+        "euler",
+        "normal",
+        1
+      ]
+    },
+    {
+      "id": 5,
+      "type": "EmptyLatentImage",
+      "pos": [
+        410,
+        500
+      ],
+      "size": {
+        "0": 320,
+        "1": 110
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            2
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        1024,
+        1024,
+        1
+      ]
+    },
+    {
+      "id": 13,
+      "type": "Note",
+      "pos": [
+        410,
+        660
+      ],
+      "size": [
+        640,
+        420
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "properties": {
+        "text": ""
+      },
+      "widgets_values": [
+        "ISA Workflow\n-------------------------\nThe attempt of this wf is to render easily the prompts generated by ISA.\nThey are saved in file text, one for the positives prompts and one for the negatives, located in:\nPath_to/ISA/output folder.\n\nNX::MultiPromptsLoader\n-------------------------\nThis group of nodes accept the paths to positive and negative prompts files.\nSet \"choose_src\" on true to read the prompts from this files.\n\nIf several prompts exists in the files, \"start_index\" and \"max_rows\" let you choose which prompt to start with (start at 0!) and how many to retrieve. \nFor example, start_index = 0 and max_rows = 2, will read the first two prompts in the list. start_index = 2 and max_rows = 1, will read only the 3rd. \n\nIf you want to test some prompts directly, without read the files, set \"choose_src\" on false and use the \"positive\" and \"negative\" multiline widgets. Like in the file, one prompt by line (\"star_index\" and \"max_rows\" work in the same way).\n\nDependencies\n-------------------------\nNX::MultiPromptsLoader use some nodes from this packages:\n\n- TinyTerraNodes (ttn): https://github.com/TinyTerra/ComfyUI_tinyterraNodes\n- WAS Nodes Suite: https://github.com/WASasquatch/was-node-suite-comfyui\n- Comfyroll Studio: https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes\n\nIf is not, install this packages first to use this wf!\n\nDownload ISA on GitHub:\nhttps://github.com/Franck-Demongin/ISA"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 12,
+      "type": "workflow/NX::MultiPromptsLoader",
+      "pos": [
+        -50,
+        390
+      ],
+      "size": {
+        "0": 400,
+        "1": 460
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "STRING",
+          "links": [
+            13
+          ],
+          "shape": 6,
+          "slot_index": 0
+        },
+        {
+          "name": "negative",
+          "type": "STRING",
+          "links": [
+            14
+          ],
+          "shape": 6,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "workflow/NX::MultiPromptsLoader"
+      },
+      "widgets_values": [
+        true,
+        0,
+        "Yes",
+        3,
+        "Yes",
+        "",
+        "",
+        "",
+        "",
+        false,
+        0,
+        "randomize",
+        0,
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "pos": [
+        1220,
+        200
+      ],
+      "size": {
+        "0": 210,
+        "1": 50
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 12
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            15
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 15,
+      "type": "SaveImage",
+      "pos": [
+        1220,
+        300
+      ],
+      "size": {
+        "0": 320,
+        "1": 60
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 15
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      4,
+      0,
+      3,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      5,
+      0,
+      3,
+      3,
+      "LATENT"
+    ],
+    [
+      3,
+      4,
+      1,
+      6,
+      0,
+      "CLIP"
+    ],
+    [
+      4,
+      6,
+      0,
+      3,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      5,
+      4,
+      1,
+      7,
+      0,
+      "CLIP"
+    ],
+    [
+      6,
+      7,
+      0,
+      3,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      7,
+      3,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      10,
+      4,
+      2,
+      10,
+      0,
+      "*"
+    ],
+    [
+      11,
+      10,
+      0,
+      11,
+      0,
+      "*"
+    ],
+    [
+      12,
+      11,
+      0,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      13,
+      12,
+      0,
+      6,
+      1,
+      "STRING"
+    ],
+    [
+      14,
+      12,
+      1,
+      7,
+      1,
+      "STRING"
+    ],
+    [
+      15,
+      8,
+      0,
+      15,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6830134553650705,
+      "offset": [
+        281.58106331005735,
+        -93.80400800131538
+      ]
+    },
+    "groupNodes": {
+      "NX::MultiPromptsLoader": {
+        "author": "Nx",
+        "category": "prompt",
+        "config": {
+          "0": {
+            "input": {
+              "boolean": {
+                "name": "choose_src - True for files",
+                "visible": true
+              }
+            }
+          },
+          "1": {
+            "input": {
+              "index": {
+                "name": "start_index"
+              },
+              "print_to_console": {
+                "visible": false
+              }
+            },
+            "output": {
+              "1": {
+                "visible": false
+              }
+            }
+          },
+          "2": {
+            "input": {
+              "index": {
+                "name": "max_rows"
+              },
+              "print_to_console": {
+                "visible": false
+              }
+            },
+            "output": {
+              "1": {
+                "visible": false
+              }
+            }
+          },
+          "3": {
+            "input": {
+              "text": {
+                "name": "positive"
+              }
+            }
+          },
+          "4": {
+            "input": {
+              "text": {
+                "name": "negative"
+              }
+            }
+          },
+          "5": {
+            "input": {
+              "dictionary_name": {
+                "visible": false
+              },
+              "file_path": {
+                "name": "positive file_path"
+              }
+            },
+            "output": {
+              "1": {
+                "visible": false
+              }
+            }
+          },
+          "6": {
+            "input": {
+              "dictionary_name": {
+                "visible": false
+              },
+              "file_path": {
+                "name": "negative file_path"
+              }
+            },
+            "output": {
+              "1": {
+                "visible": false
+              }
+            }
+          },
+          "7": {
+            "input": {
+              "boolean": {
+                "name": "force_reload",
+                "visible": false
+              }
+            }
+          },
+          "8": {
+            "input": {
+              "seed": {
+                "visible": false
+              }
+            }
+          },
+          "9": {
+            "input": {
+              "int": {
+                "visible": false
+              }
+            },
+            "output": {
+              "0": {
+                "visible": false
+              },
+              "2": {
+                "visible": false
+              }
+            }
+          },
+          "10": {
+            "input": {
+              "boolean": {
+                "visible": false
+              },
+              "value_if_false": {
+                "visible": false
+              },
+              "value_if_true": {
+                "visible": false
+              }
+            },
+            "output": {
+              "1": {
+                "visible": false
+              },
+              "2": {
+                "visible": false
+              }
+            }
+          },
+          "11": {
+            "input": {
+              "int": {
+                "visible": false
+              }
+            },
+            "output": {
+              "0": {
+                "visible": false
+              },
+              "1": {
+                "visible": false
+              }
+            }
+          },
+          "12": {
+            "input": {
+              "boolean": {
+                "visible": false
+              },
+              "text_a": {
+                "visible": false
+              },
+              "text_b": {
+                "visible": false
+              }
+            }
+          },
+          "13": {
+            "input": {
+              "boolean": {
+                "visible": false
+              },
+              "text_a": {
+                "visible": false
+              },
+              "text_b": {
+                "visible": false
+              }
+            }
+          },
+          "14": {
+            "input": {
+              "append_text": {
+                "visible": false
+              },
+              "max_rows": {
+                "visible": false
+              },
+              "multiline_text": {
+                "visible": false
+              },
+              "prepend_text": {
+                "visible": false
+              },
+              "start_index": {
+                "visible": false
+              }
+            },
+            "output": {
+              "0": {
+                "name": "positive",
+                "visible": true
+              },
+              "1": {
+                "visible": false
+              },
+              "2": {
+                "visible": false
+              }
+            }
+          },
+          "15": {
+            "input": {
+              "append_text": {
+                "visible": false
+              },
+              "max_rows": {
+                "visible": false
+              },
+              "multiline_text": {
+                "visible": false
+              },
+              "prepend_text": {
+                "visible": false
+              },
+              "start_index": {
+                "visible": false
+              }
+            },
+            "output": {
+              "0": {
+                "name": "negative"
+              },
+              "1": {
+                "visible": false
+              },
+              "2": {
+                "visible": false
+              }
+            }
+          }
+        },
+        "datetime": 1714929565543,
+        "external": [
+          [
+            null,
+            0,
+            "STRING"
+          ],
+          [
+            null,
+            0,
+            "STRING"
+          ]
+        ],
+        "links": [
+          [
+            8,
+            0,
+            9,
+            0,
+            303,
+            "INT"
+          ],
+          [
+            7,
+            0,
+            10,
+            0,
+            302,
+            "BOOLEAN"
+          ],
+          [
+            9,
+            1,
+            10,
+            1,
+            305,
+            "FLOAT"
+          ],
+          [
+            10,
+            0,
+            11,
+            0,
+            307,
+            "INT"
+          ],
+          [
+            11,
+            2,
+            5,
+            0,
+            310,
+            "STRING"
+          ],
+          [
+            11,
+            2,
+            6,
+            0,
+            310,
+            "STRING"
+          ],
+          [
+            5,
+            0,
+            12,
+            0,
+            300,
+            "STRING"
+          ],
+          [
+            3,
+            0,
+            12,
+            1,
+            298,
+            "STRING"
+          ],
+          [
+            0,
+            0,
+            12,
+            2,
+            295,
+            "BOOLEAN"
+          ],
+          [
+            6,
+            0,
+            13,
+            0,
+            301,
+            "STRING"
+          ],
+          [
+            4,
+            0,
+            13,
+            1,
+            299,
+            "STRING"
+          ],
+          [
+            0,
+            0,
+            13,
+            2,
+            295,
+            "BOOLEAN"
+          ],
+          [
+            12,
+            0,
+            14,
+            0,
+            323,
+            "STRING"
+          ],
+          [
+            1,
+            0,
+            14,
+            1,
+            331,
+            "INT"
+          ],
+          [
+            2,
+            0,
+            14,
+            2,
+            330,
+            "INT"
+          ],
+          [
+            13,
+            0,
+            15,
+            0,
+            322,
+            "STRING"
+          ],
+          [
+            1,
+            0,
+            15,
+            1,
+            331,
+            "INT"
+          ],
+          [
+            2,
+            0,
+            15,
+            2,
+            330,
+            "INT"
+          ]
+        ],
+        "nodes": [
+          {
+            "flags": {},
+            "index": 0,
+            "mode": 0,
+            "order": 11,
+            "outputs": [
+              {
+                "links": [],
+                "name": "BOOLEAN",
+                "shape": 3,
+                "slot_index": 0,
+                "type": "BOOLEAN"
+              }
+            ],
+            "pos": [
+              -2240,
+              -1460
+            ],
+            "properties": {
+              "Node name for S&R": "Logic Boolean Primitive"
+            },
+            "shape": 1,
+            "size": {
+              "0": 330,
+              "1": 60
+            },
+            "title": "Choose SRC",
+            "type": "Logic Boolean Primitive",
+            "widgets_values": [
+              false
+            ]
+          },
+          {
+            "flags": {},
+            "index": 1,
+            "mode": 0,
+            "order": 14,
+            "outputs": [
+              {
+                "links": [],
+                "name": "INT",
+                "shape": 3,
+                "slot_index": 0,
+                "type": "INT"
+              },
+              {
+                "links": null,
+                "name": "show_help",
+                "shape": 3,
+                "type": "STRING"
+              }
+            ],
+            "pos": [
+              -1210,
+              -1120
+            ],
+            "properties": {
+              "Node name for S&R": "CR Index"
+            },
+            "shape": 1,
+            "size": {
+              "0": 260,
+              "1": 100
+            },
+            "title": "start_index",
+            "type": "CR Index",
+            "widgets_values": [
+              0,
+              "No"
+            ]
+          },
+          {
+            "flags": {},
+            "index": 2,
+            "mode": 0,
+            "order": 10,
+            "outputs": [
+              {
+                "links": [],
+                "name": "INT",
+                "shape": 3,
+                "slot_index": 0,
+                "type": "INT"
+              },
+              {
+                "links": null,
+                "name": "show_help",
+                "shape": 3,
+                "type": "STRING"
+              }
+            ],
+            "pos": [
+              -1210,
+              -940
+            ],
+            "properties": {
+              "Node name for S&R": "CR Index"
+            },
+            "shape": 1,
+            "size": {
+              "0": 260,
+              "1": 100
+            },
+            "title": "max_rows",
+            "type": "CR Index",
+            "widgets_values": [
+              1000,
+              "No"
+            ]
+          },
+          {
+            "bgcolor": "#353",
+            "color": "#232",
+            "flags": {},
+            "index": 3,
+            "mode": 0,
+            "order": 12,
+            "outputs": [
+              {
+                "links": [],
+                "name": "text",
+                "shape": 3,
+                "slot_index": 0,
+                "type": "STRING"
+              }
+            ],
+            "pos": [
+              -2490,
+              -1170
+            ],
+            "properties": {
+              "Node name for S&R": "ttN text",
+              "ttNnodeVersion": "1.0.0"
+            },
+            "shape": 1,
+            "size": {
+              "0": 580,
+              "1": 320
+            },
+            "title": "text - Positive",
+            "type": "ttN text",
+            "widgets_values": [
+              ""
+            ]
+          },
+          {
+            "bgcolor": "#533",
+            "color": "#322",
+            "flags": {},
+            "index": 4,
+            "mode": 0,
+            "order": 13,
+            "outputs": [
+              {
+                "links": [],
+                "name": "text",
+                "shape": 3,
+                "slot_index": 0,
+                "type": "STRING"
+              }
+            ],
+            "pos": [
+              -2480,
+              -630
+            ],
+            "properties": {
+              "Node name for S&R": "ttN text",
+              "ttNnodeVersion": "1.0.0"
+            },
+            "shape": 1,
+            "size": {
+              "0": 580,
+              "1": 210
+            },
+            "title": "text - Negative",
+            "type": "ttN text",
+            "widgets_values": [
+              ""
+            ]
+          },
+          {
+            "bgcolor": "#353",
+            "color": "#232",
+            "flags": {},
+            "index": 5,
+            "inputs": [
+              {
+                "link": null,
+                "name": "dictionary_name",
+                "slot_index": 0,
+                "type": "STRING",
+                "widget": {
+                  "name": "dictionary_name"
+                }
+              }
+            ],
+            "mode": 0,
+            "order": 32,
+            "outputs": [
+              {
+                "links": [],
+                "name": "STRING",
+                "shape": 3,
+                "slot_index": 0,
+                "type": "STRING"
+              },
+              {
+                "links": null,
+                "name": "DICT",
+                "shape": 3,
+                "type": "DICT"
+              }
+            ],
+            "pos": [
+              -2220,
+              -1330
+            ],
+            "properties": {
+              "Node name for S&R": "Load Text File"
+            },
+            "shape": 1,
+            "size": {
+              "0": 320,
+              "1": 100
+            },
+            "title": "Load Text File - Positive",
+            "type": "Load Text File",
+            "widgets_values": [
+              "",
+              ""
+            ]
+          },
+          {
+            "bgcolor": "#533",
+            "color": "#322",
+            "flags": {},
+            "index": 6,
+            "inputs": [
+              {
+                "link": null,
+                "name": "dictionary_name",
+                "type": "STRING",
+                "widget": {
+                  "name": "dictionary_name"
+                }
+              }
+            ],
+            "mode": 0,
+            "order": 33,
+            "outputs": [
+              {
+                "links": [],
+                "name": "STRING",
+                "shape": 3,
+                "slot_index": 0,
+                "type": "STRING"
+              },
+              {
+                "links": null,
+                "name": "DICT",
+                "shape": 3,
+                "type": "DICT"
+              }
+            ],
+            "pos": [
+              -2230,
+              -790
+            ],
+            "properties": {
+              "Node name for S&R": "Load Text File"
+            },
+            "shape": 1,
+            "size": {
+              "0": 320,
+              "1": 100
+            },
+            "title": "Load Text File - Negative",
+            "type": "Load Text File",
+            "widgets_values": [
+              "",
+              "[filename]"
+            ]
+          },
+          {
+            "flags": {},
+            "index": 7,
+            "mode": 0,
+            "order": 8,
+            "outputs": [
+              {
+                "links": [],
+                "name": "BOOLEAN",
+                "shape": 3,
+                "slot_index": 0,
+                "type": "BOOLEAN"
+              }
+            ],
+            "pos": [
+              -3830,
+              -1000
+            ],
+            "properties": {
+              "Node name for S&R": "Logic Boolean Primitive"
+            },
+            "shape": 1,
+            "size": {
+              "0": 330,
+              "1": 60
+            },
+            "title": "Reload",
+            "type": "Logic Boolean Primitive",
+            "widgets_values": [
+              false
+            ]
+          },
+          {
+            "flags": {},
+            "index": 8,
+            "mode": 0,
+            "order": 9,
+            "outputs": [
+              {
+                "links": [],
+                "name": "seed",
+                "shape": 3,
+                "slot_index": 0,
+                "type": "INT"
+              }
+            ],
+            "pos": [
+              -3830,
+              -880
+            ],
+            "properties": {
+              "Node name for S&R": "ttN seed",
+              "ttNnodeVersion": "1.0.0"
+            },
+            "shape": 1,
+            "size": {
+              "0": 330,
+              "1": 90
+            },
+            "type": "ttN seed",
+            "widgets_values": [
+              442934713266341,
+              "randomize"
+            ]
+          },
+          {
+            "flags": {},
+            "index": 9,
+            "inputs": [
+              {
+                "link": null,
+                "name": "int",
+                "type": "INT",
+                "widget": {
+                  "name": "int"
+                }
+              }
+            ],
+            "mode": 0,
+            "order": 19,
+            "outputs": [
+              {
+                "links": [],
+                "name": "int",
+                "shape": 3,
+                "type": "INT"
+              },
+              {
+                "links": [],
+                "name": "float",
+                "shape": 3,
+                "slot_index": 1,
+                "type": "FLOAT"
+              },
+              {
+                "links": null,
+                "name": "text",
+                "shape": 3,
+                "type": "STRING"
+              }
+            ],
+            "pos": [
+              -3470,
+              -880
+            ],
+            "properties": {
+              "Node name for S&R": "ttN int",
+              "ttNnodeVersion": "1.0.0"
+            },
+            "shape": 1,
+            "size": {
+              "0": 210,
+              "1": 90
+            },
+            "type": "ttN int",
+            "widgets_values": [
+              0
+            ]
+          },
+          {
+            "flags": {},
+            "index": 10,
+            "inputs": [
+              {
+                "link": null,
+                "name": "boolean",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "boolean"
+                }
+              },
+              {
+                "link": null,
+                "name": "value_if_true",
+                "type": "FLOAT",
+                "widget": {
+                  "name": "value_if_true"
+                }
+              }
+            ],
+            "mode": 0,
+            "order": 22,
+            "outputs": [
+              {
+                "links": [],
+                "name": "INT",
+                "shape": 3,
+                "slot_index": 0,
+                "type": "INT"
+              },
+              {
+                "links": null,
+                "name": "FLOAT",
+                "shape": 3,
+                "type": "FLOAT"
+              },
+              {
+                "links": null,
+                "name": "show_help",
+                "shape": 3,
+                "type": "STRING"
+              }
+            ],
+            "pos": [
+              -3200,
+              -1000
+            ],
+            "properties": {
+              "Node name for S&R": "CR Set Value On Boolean"
+            },
+            "shape": 1,
+            "size": [
+              320,
+              150
+            ],
+            "title": "CR Set Value On Boolean",
+            "type": "CR Set Value On Boolean",
+            "widgets_values": [
+              true,
+              1,
+              0
+            ]
+          },
+          {
+            "flags": {},
+            "index": 11,
+            "inputs": [
+              {
+                "link": null,
+                "name": "int",
+                "slot_index": 0,
+                "type": "INT",
+                "widget": {
+                  "name": "int"
+                }
+              }
+            ],
+            "mode": 0,
+            "order": 29,
+            "outputs": [
+              {
+                "links": null,
+                "name": "int",
+                "shape": 3,
+                "type": "INT"
+              },
+              {
+                "links": null,
+                "name": "float",
+                "shape": 3,
+                "type": "FLOAT"
+              },
+              {
+                "links": [],
+                "name": "text",
+                "shape": 3,
+                "slot_index": 2,
+                "type": "STRING"
+              }
+            ],
+            "pos": [
+              -2830,
+              -1000
+            ],
+            "properties": {
+              "Node name for S&R": "ttN int",
+              "ttNnodeVersion": "1.0.0"
+            },
+            "shape": 1,
+            "size": {
+              "0": 210,
+              "1": 70
+            },
+            "type": "ttN int",
+            "widgets_values": [
+              157468219788489
+            ]
+          },
+          {
+            "flags": {},
+            "index": 12,
+            "inputs": [
+              {
+                "link": null,
+                "name": "text_a",
+                "type": "STRING",
+                "widget": {
+                  "name": "text_a"
+                }
+              },
+              {
+                "link": null,
+                "name": "text_b",
+                "type": "STRING",
+                "widget": {
+                  "name": "text_b"
+                }
+              },
+              {
+                "link": null,
+                "name": "boolean",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "boolean"
+                }
+              }
+            ],
+            "mode": 0,
+            "order": 36,
+            "outputs": [
+              {
+                "links": [],
+                "name": "STRING",
+                "shape": 3,
+                "slot_index": 0,
+                "type": "STRING"
+              }
+            ],
+            "pos": [
+              -1650,
+              -1200
+            ],
+            "properties": {
+              "Node name for S&R": "Text Input Switch"
+            },
+            "shape": 1,
+            "size": [
+              320,
+              110
+            ],
+            "type": "Text Input Switch",
+            "widgets_values": [
+              "",
+              "",
+              false
+            ]
+          },
+          {
+            "flags": {},
+            "index": 13,
+            "inputs": [
+              {
+                "link": null,
+                "name": "text_a",
+                "type": "STRING",
+                "widget": {
+                  "name": "text_a"
+                }
+              },
+              {
+                "link": null,
+                "name": "text_b",
+                "type": "STRING",
+                "widget": {
+                  "name": "text_b"
+                }
+              },
+              {
+                "link": null,
+                "name": "boolean",
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "boolean"
+                }
+              }
+            ],
+            "mode": 0,
+            "order": 37,
+            "outputs": [
+              {
+                "links": [],
+                "name": "STRING",
+                "shape": 3,
+                "slot_index": 0,
+                "type": "STRING"
+              }
+            ],
+            "pos": [
+              -1650,
+              -1020
+            ],
+            "properties": {
+              "Node name for S&R": "Text Input Switch"
+            },
+            "shape": 1,
+            "size": [
+              320,
+              110
+            ],
+            "type": "Text Input Switch",
+            "widgets_values": [
+              "",
+              "",
+              false
+            ]
+          },
+          {
+            "bgcolor": "#353",
+            "color": "#232",
+            "flags": {},
+            "index": 14,
+            "inputs": [
+              {
+                "link": null,
+                "name": "multiline_text",
+                "type": "STRING",
+                "widget": {
+                  "name": "multiline_text"
+                }
+              },
+              {
+                "link": null,
+                "name": "start_index",
+                "slot_index": 1,
+                "type": "INT",
+                "widget": {
+                  "name": "start_index"
+                }
+              },
+              {
+                "link": null,
+                "name": "max_rows",
+                "type": "INT",
+                "widget": {
+                  "name": "max_rows"
+                }
+              }
+            ],
+            "mode": 0,
+            "order": 40,
+            "outputs": [
+              {
+                "links": [],
+                "name": "prompt",
+                "shape": 6,
+                "slot_index": 0,
+                "type": "STRING"
+              },
+              {
+                "links": null,
+                "name": "body_text",
+                "shape": 6,
+                "type": "STRING"
+              },
+              {
+                "links": null,
+                "name": "show_help",
+                "shape": 3,
+                "type": "STRING"
+              }
+            ],
+            "pos": [
+              -840,
+              -1200
+            ],
+            "properties": {
+              "Node name for S&R": "CR Prompt List"
+            },
+            "shape": 1,
+            "size": {
+              "0": 210,
+              "1": 120
+            },
+            "title": "Output Positive",
+            "type": "CR Prompt List",
+            "widgets_values": [
+              "",
+              "body_text",
+              "",
+              2690,
+              269
+            ]
+          },
+          {
+            "bgcolor": "#533",
+            "color": "#322",
+            "flags": {},
+            "index": 15,
+            "inputs": [
+              {
+                "link": null,
+                "name": "multiline_text",
+                "type": "STRING",
+                "widget": {
+                  "name": "multiline_text"
+                }
+              },
+              {
+                "link": null,
+                "name": "start_index",
+                "type": "INT",
+                "widget": {
+                  "name": "start_index"
+                }
+              },
+              {
+                "link": null,
+                "name": "max_rows",
+                "slot_index": 2,
+                "type": "INT",
+                "widget": {
+                  "name": "max_rows"
+                }
+              }
+            ],
+            "mode": 0,
+            "order": 41,
+            "outputs": [
+              {
+                "links": [],
+                "name": "prompt",
+                "shape": 6,
+                "slot_index": 0,
+                "type": "STRING"
+              },
+              {
+                "links": null,
+                "name": "body_text",
+                "shape": 6,
+                "type": "STRING"
+              },
+              {
+                "links": null,
+                "name": "show_help",
+                "shape": 3,
+                "type": "STRING"
+              }
+            ],
+            "pos": [
+              -840,
+              -1020
+            ],
+            "properties": {
+              "Node name for S&R": "CR Prompt List"
+            },
+            "shape": 1,
+            "size": {
+              "0": 210,
+              "1": 120
+            },
+            "title": "Output Negative",
+            "type": "CR Prompt List",
+            "widgets_values": [
+              "",
+              "body_text",
+              "",
+              2690,
+              269
+            ]
+          }
+        ],
+        "packname": "NX_Pack",
+        "version": "0.4"
+      }
+    }
+  },
+  "version": 0.4
+}
