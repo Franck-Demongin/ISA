@@ -46,9 +46,12 @@ Lighting is the lighting of the image. Lighting keywords can have a huge effect 
 Example: studio lighting, sunlight, ambient lighting, artificial lighting, etc.
 
 Negative prompt:
-negative prompt are a list of keywords to remove from the image. 
-If the subject of the positive prompt is about a landscape, the negative prompt coulb be: Ugly, Blurry, Text, Logo, Watermark, Signature, name artist, Frame
-If the subject of the positive pprompt is about a person, the negative prompt coulb be: Disfigure Body, Disfigured Torso, Disfigured Face, Disfigured Eyes, Disfigured Pupils, Disfigured Arms, Disfigured Hands,Disfigured Fingers, Disfigured Legs, Disfigured Toes
+Negative prompts are keywords to be removed from the image. They must be separated by a comma. 
+If the subject of the positive prompt is about a landscape, the negative prompt coulb be: 
+Ugly, Blurry, Text, Logo, Watermark, Signature, name artist, Frame
+
+If the subject of the positive prompt is about a person, the negative prompt coulb be: 
+Disfigure Body, Disfigured Torso, Disfigured Face, Disfigured Eyes, Disfigured Pupils, Disfigured Arms, Disfigured Hands,Disfigured Fingers, Disfigured Legs, Disfigured Toes
 
 Keyword weight:
 To give more or less weight to a keyword, use the syntax (keyword:factor), where factor is a value such that less than 1 means less important and larger than 1 means more important.
@@ -86,26 +89,11 @@ Negative prompt: drawing, painting, ugly, blurry, distorted, low quality, logo, 
 
 Now respond to the user with the number of prompts required. Don't forget to respond in english. Use the history if nedded.
 
-Output in JSON using the schema defined here: 
-{
-    "prompts": {
-        "type": "array",
-        "description": "List of prompts to generate image from query",
-        "items": {
-            "type": "object",
-            "properties": {
-                "positive": {
-                    "type": "string",
-                    "description": "Positive prompt to generate image from query"
-                },
-                "negative": {
-                    "type": "string",
-                    "description": "Negative prompt to generate image from query"
-                }
-            }
-        }
-    }
-}"""
+The output should be formatted as a JSON instance that conforms to the JSON schema below.
+As an example, for the schema {"properties": {"foo": {"title": "Foo", "description": "a list of strings", "type": "array", "items": {"type": "string"}}}, "required": ["foo"]}}
+the object {"foo": ["bar", "baz"]} is a well-formatted instance of the schema. The object {"properties": {"foo": ["bar", "baz"]}} is not well-formatted.
+Here is the output schema:
+"""
 
 prompt_system_vision = \
 """You are a helpful assistant.
