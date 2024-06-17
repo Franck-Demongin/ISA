@@ -7,6 +7,7 @@ import random
 import re
 import time
 from typing import List
+import uuid
 import streamlit as st
 import ollama
 from pydantic import BaseModel, Field, ValidationError
@@ -271,11 +272,11 @@ def display_prompts(prompts_list: PromptsList, output_error: bool = False) -> bo
             with col_1:
                 st.write(f":green[Positive {index + 1}]", unsafe_allow_html=True)    
             with col_2:
-                st.button("Edit", key=f"edit_{index}", use_container_width=True)
+                st.button("Edit", key=f"edit_{uuid.uuid4()}", use_container_width=True)
             with col_3:
-                st.button("Copy", key=f"copy_{index}", use_container_width=True)                
+                st.button("Copy", key=f"copy_{uuid.uuid4()}", use_container_width=True)                
             with col_4:
-                st.button("Remove", key=f"delete_{index}", use_container_width=True)                
+                st.button("Remove", key=f"delete_{uuid.uuid4()}", use_container_width=True)                
 
             st.write(f"{prompt.positive}", unsafe_allow_html=True)
             st.write(f":red[Negative {index + 1}]<br>{prompt.negative}", unsafe_allow_html=True)
@@ -286,19 +287,19 @@ def display_prompts(prompts_list: PromptsList, output_error: bool = False) -> bo
     except json.decoder.JSONDecodeError:
         # If JSON decoding fails, output an error message if output_error is True
         if output_error:
-            st.write("No prompts found. Aborded.")
+            st.write("No prompts found. Aborded. 1")
         return False
     
     except ValueError:
         # Output an error message if output_error is True
         if output_error:
-            st.write("No prompts found. Aborded.")
+            st.write("No prompts found. Aborded. 2")
         return False
     
     except Exception as e:
         # Output an error message if output_error is True
         if output_error:
-            st.write("No prompts found. Aborded.")
+            st.write("No prompts found. Aborded. 3")
         return False
 
 def save_response(response: str, placeholder: st.empty) -> None:
@@ -467,7 +468,7 @@ with st.sidebar:
         st.image(uploaded_file)
 
     st.markdown('---')
-    col_1, col_2 = st.columns(2)
+    col_1, col_2 = st.columns((1, 2))
     col_1.markdown(f"<p style='font-size: 12px;'>Version {VERSION}</p>", unsafe_allow_html=True)
     col_2.markdown(f"<p style='text-align: right; font-size: 12px;'>Powered by <a href='https://ollama.com/' target='_blank'>Ollama</a> & <a href='https://streamlit.io/' target='_blank'>Streamlit</a></p>", unsafe_allow_html=True)
 
@@ -537,7 +538,6 @@ else:
             with st.chat_message("assistant"):
                 with st.spinner("Generating..."):
                     prompts_list = get_prompts()
-                    print(prompts_list)
                     if display_prompts(prompts_list, output_error=True):
                         st.button("Save", on_click=save_response, args=[st.session_state.response, placeholder], key="save_response")
             
