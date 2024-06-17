@@ -8,7 +8,7 @@
 ISA creates prompts to generate images with SDXL Stable Diffusion models.
 It work locally with Ollama LLM model like llam3 or Mistral. 
 
-Here an exemple of prompt it can generate:
+Here an example of prompt it can generate:
 
 <img src="https://github.com/Franck-Demongin/ISA/assets/54265936/68bfc01b-9127-463e-91f4-8689c203ac8b" width="250px">
 
