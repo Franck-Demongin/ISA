@@ -267,39 +267,34 @@ def display_prompts(prompts_list: PromptsList, output_error: bool = False) -> bo
     """
     try:        
         for index, prompt in enumerate(prompts_list.prompts):
-            col_1, col_2, col_3, col_4 = st.columns((4, 1, 1, 1))
-
-            with col_1:
-                st.write(f":green[Positive {index + 1}]", unsafe_allow_html=True)    
-            with col_2:
-                st.button("Edit", key=f"edit_{uuid.uuid4()}", use_container_width=True)
-            with col_3:
-                st.button("Copy", key=f"copy_{uuid.uuid4()}", use_container_width=True)                
-            with col_4:
-                st.button("Remove", key=f"delete_{uuid.uuid4()}", use_container_width=True)                
-
-            st.write(f"{prompt.positive}", unsafe_allow_html=True)
+            st.write(f":green[Positive {index + 1}]<br>{prompt.positive}", unsafe_allow_html=True)
             st.write(f":red[Negative {index + 1}]<br>{prompt.negative}", unsafe_allow_html=True)
             st.markdown("<hr style='margin-top: 0px; margin-bottom: 0px;'>", unsafe_allow_html=True)
         # Return True if prompts are found and displayed
         return True
     
-    except json.decoder.JSONDecodeError:
+    except json.decoder.JSONDecodeError as e:
+        print("JSONDecodeError when parsing prompts.")
+        print(e)
         # If JSON decoding fails, output an error message if output_error is True
         if output_error:
-            st.write("No prompts found. Aborded. 1")
+            st.write("No prompts found. Aborded.")
         return False
     
-    except ValueError:
+    except ValueError as e:
+        print("ValueError when parsing prompts.")
+        print(e)
         # Output an error message if output_error is True
         if output_error:
-            st.write("No prompts found. Aborded. 2")
+            st.write("No prompts found. Aborded.")
         return False
     
     except Exception as e:
+        print("Error when parsing prompts.")
+        print(e)
         # Output an error message if output_error is True
         if output_error:
-            st.write("No prompts found. Aborded. 3")
+            st.write("No prompts found. Aborded.")
         return False
 
 def save_response(response: str, placeholder: st.empty) -> None:

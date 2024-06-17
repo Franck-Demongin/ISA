@@ -1,10 +1,22 @@
 ![ISA_Hero](https://github.com/Franck-Demongin/ISA/assets/54265936/0836dded-3272-4ddf-abff-3e1b13dda044)
 
+
+<img src="https://img.shields.io/badge/Python-3.10-blue" /> <img src="https://img.shields.io/badge/Ollama-orange" /> <img src="https://img.shields.io/badge/Streamlit-blue" /> [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
+
 # ISA
+
 ISA creates prompts to generate images with SDXL Stable Diffusion models.
 It work locally with Ollama LLM model like llam3 or Mistral. 
 
-<img src="https://img.shields.io/badge/Python-3.10-blue" /> <img src="https://img.shields.io/badge/Ollama-orange" /> <img src="https://img.shields.io/badge/Streamlit-blue" /> [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
+Here an exemple of prompt it can generate:
+
+> Q.
+> Create 1 prompt about: A superhero squirrel saving the day
+>
+> R.
+>Positive: "oil painting of a (superhero:1.3), squirrel standing heroically, city skyline in the background, realistic textures on fur and building, warm color palette, sharp focus, high detail, 4k resolution"
+> 
+> Negative: "poor lighting, blurry, distorted, low quality, signature, watermark, text, logo"
 
 ## Installation
 
@@ -12,7 +24,7 @@ First of all, you need Ollama to use ISA.
 Go to [ollama.com](https://ollama.com/) and follow the instructions to install it on your system. Ollama is available for Windows, Mac and Linux.
 
 If GIT is installed, open a terminal where you want install ISA and type: 
-```:bash
+```bash
 git clone https://github.com/Franck-Demongin/ISA.git
 ```
 
@@ -20,13 +32,13 @@ If GIT is not installed, retrieve the [ZIP](https://github.com/Franck-Demongin/I
 
 Open a terminal in the folder ISA.  
 Create a virtual env to isolate dependencies:
-```:bash
+```bash
 python -m venv .venv
 ```
 _python_ should be replace by the right command according to your installation. On Linux, it could be _python3.10_ (or 3.11), on Windows _python.exe_
 
 Activate the virtual environmant:
-```:bash
+```bash
 # Windows
 .venv\Scripts\activate
 
@@ -34,9 +46,17 @@ Activate the virtual environmant:
 source .venv/bin/activae
 ```
 Install dependencies:
-```:bash
+```bash
 pip install -r requirements.txt
 ```
+### Update
+
+If ISA has been installed with GIT, open a terminal in the ISA directory and type:
+```bash
+git pull
+```
+
+If ISA was downloaded as a ZIP archive, download the new ZIP version, save the _output_ folder (to preserve your prompts), delete the ISA directory and reinstall it.
 
 ## Models
 
@@ -45,7 +65,7 @@ ISA work with 2 types of models.
 A LLM like _llama3_ or _mistral_ and a multimodal model for vision anlayse.  
 The first thing is to download the models from ollama.com.  
 The simple way is to use CLI command. Open a terminal and type:
-```:bash
+```bash
 # download the latest version of llama3
 ollama pull llama3
 
@@ -112,6 +132,14 @@ In first they are added to a backup file _prompts_backup.txt_, one line for the 
 The second way save the prompts in _prompts_positive.txt_ and _prompts_negative.txt_, one line per prompt, no separator. The news prompts replace the previous. This files can be used in ComfyUI with a simple workflow.
 
 ## Changelog
+
+### 0.2.1 - 2024-06-17
+__Changed:__
+- Use Pydantic to define and validate the output format. Increases reliability and prevents errors during processing, 
+- When loading ISA or cleaning the history, 3 subjects are randomly extracted from a list.
+
+__Fixed:__
+- System prompts updated to avoid incorrect formats in negative prompts.
 
 ### 0.2.0 - 2024-06-13
 __Changed:__
