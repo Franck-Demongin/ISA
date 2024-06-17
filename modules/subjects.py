@@ -18,7 +18,7 @@ subjects = [
     "Create 1 prompt about: Virtual reality worlds reflecting the subconscious minds of their users",
     "Create 4 prompts about: Time-traveling heroes changing the course of history",
     "Create 3 prompts about: Alternate realities and parallel universes",
-    "Create 2 prompts about: Superpowered beings struggling with personal demons"
+    "Create 2 prompts about: Superpowered beings struggling with personal demons",
     "Create 3 prompts about: A mermaid riding a unicorn",
     "Create 4 prompts about: A city in the clouds",
     "Create 5 prompts about: A giant pineapple on a tropical island",
