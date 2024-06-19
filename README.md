@@ -3,7 +3,9 @@
 
 <img src="https://img.shields.io/badge/Python-3.10-blue" /> <img src="https://img.shields.io/badge/Ollama-orange" /> <img src="https://img.shields.io/badge/Streamlit-blue" /> [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
 
-# ISA
+# ISA 
+
+**Version: 0.2.2**
 
 ISA creates prompts to generate images with SDXL Stable Diffusion models.
 It work locally with Ollama LLM model like llam3 or Mistral. 
