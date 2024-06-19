@@ -8,6 +8,7 @@ import re
 import time
 from typing import List
 import uuid
+import pyperclip
 import streamlit as st
 import ollama
 from pydantic import BaseModel, Field, ValidationError
@@ -15,7 +16,7 @@ from pydantic import BaseModel, Field, ValidationError
 from modules.prompts_system import prompt_system_chat, prompt_system_create, prompt_system_vision
 from modules.subjects import subjects
 
-VERSION = "0.2.1"
+VERSION = "0.2.2"
 
 PATH_OUTPUT = "output"
 PATH_POSTIVE = os.path.join(PATH_OUTPUT, "prompts_positive.txt")
@@ -252,6 +253,17 @@ User's query:
 
     return content
 
+def copy_prompt(prompt: str) -> None:
+    """
+    Copy prompt.
+
+    This function copies the prompt to the clipboard.
+
+    Args:
+        prompt (str): The prompt to copy.
+    """
+    pyperclip.copy(prompt)
+    
 def display_prompts(prompts_list: PromptsList, output_error: bool = False) -> bool:
     """
     Display prompts.
@@ -267,8 +279,20 @@ def display_prompts(prompts_list: PromptsList, output_error: bool = False) -> bo
     """
     try:        
         for index, prompt in enumerate(prompts_list.prompts):
-            st.write(f":green[Positive {index + 1}]<br>{prompt.positive}", unsafe_allow_html=True)
-            st.write(f":red[Negative {index + 1}]<br>{prompt.negative}", unsafe_allow_html=True)
+            col_1, col_2 = st.columns((4, 1))
+            with col_1:
+                st.write(f":green[Positive {index + 1}]", unsafe_allow_html=True)
+            with col_2:
+                st.button("Copy", on_click=copy_prompt, args=[prompt.positive], key=f"copy_{uuid.uuid4()}", use_container_width=True)                
+            st.write(f"{prompt.positive}", unsafe_allow_html=True)
+            
+            col_1, col_2 = st.columns((4, 1))
+            with col_1:
+                st.write(f":red[Negative {index + 1}]", unsafe_allow_html=True)
+            with col_2:
+                st.button("Copy", on_click=copy_prompt, args=[prompt.negative], key=f"copy_{uuid.uuid4()}", use_container_width=True)                
+            st.write(f"{prompt.negative}", unsafe_allow_html=True)
+            
             st.markdown("<hr style='margin-top: 0px; margin-bottom: 0px;'>", unsafe_allow_html=True)
         # Return True if prompts are found and displayed
         return True

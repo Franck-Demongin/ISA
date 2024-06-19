@@ -39,6 +39,7 @@ python -m venv .venv
 ```
 _python_ should be replace by the right command according to your installation. On Linux, it could be _python3.10_ (or 3.11), on Windows _python.exe_
 
+
 Activate the virtual environmant:
 ```bash
 # Windows
@@ -51,6 +52,10 @@ Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
+### Linux user
+
+If everything crashes when you try to copy the prompts, you'll need to install a small additional lib (check the pypy page of the pyperclip module for more info). [pyperclip](https://pypi.org/project/pyperclip/)
+
 ### Update
 
 If ISA has been installed with GIT, open a terminal in the ISA directory and type:
@@ -138,7 +143,15 @@ Prompts are saved in 2 ways.
 In first they are added to a backup file _prompts_backup.txt_, one line for the positive, one line for the negative and a separateur line.  
 The second way save the prompts in _prompts_positive.txt_ and _prompts_negative.txt_, one line per prompt, no separator. The news prompts replace the previous. This files can be used in ComfyUI with a simple workflow.
 
+You can also copy individual prompts to the clipboard for easy use in the UI you're using.
+
 ## Changelog
+
+### 0.2.2 - 2024-06-19
+__Changed:__
+- Add a "Copy" button next to each prompt to easily copy them to the clipboard.
+
+__Fixed:__
 
 ### 0.2.1 - 2024-06-17
 __Changed:__
