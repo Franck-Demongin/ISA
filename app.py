@@ -62,7 +62,13 @@ def get_models_list() -> List[str]:
     # Get the list of available models and filter out the ones that are not suitable
     models = [model['name'] for model in ollama.list()['models'] 
               if not re.search(patern, model['name'], re.IGNORECASE) and
-              not (model['name'].startswith('llava') or model['name'].startswith('moondream'))]
+              (
+                  not model['name'].startswith('llava') and
+                  not model['name'].startswith('moondream') and 
+                  not model['name'].startswith('GFalcon-UA/nous-hermes-2-vision')
+                )]
+                
+            # (model['name'].startswith('llava') or model['name'].startswith('moondream'))]
 
     # Remove the ":latest" suffix from the model names
     for index, model in enumerate(models):
@@ -86,11 +92,15 @@ def get_vision_models_list() -> List[str]:
         List[str]: A list of available LLM models for image vision.
     """
     # List of models that are suitable for image vision
-    models_list = ['llava', 'llava-phi3', 'llava-llama3', 'moondream']
+    models_list = ['llava', 'llava-phi3', 'llava-llama3', 'moondream', 'GFalcon-UA/nous-hermes-2-vision']
 
     # Get the list of available models and filter out the ones that are not suitable
     models = [model['name'] for model in ollama.list()['models'] 
-              if (model['name'].startswith('llava') or model['name'].startswith('moondream')) and
+              if (
+                  model['name'].startswith('llava') or 
+                  model['name'].startswith('moondream') or 
+                  model['name'].startswith('GFalcon-UA/nous-hermes-2-vision')
+                ) and
               not re.search('embed', model['name'], re.IGNORECASE)]
 
     # Remove the ":latest" suffix from the model names
