@@ -17,8 +17,9 @@ from modules.prompts_system import prompt_system_chat, prompt_system_create, pro
 from modules.subjects import subjects
 
 VERSION = "0.2.2"
-
-PATH_OUTPUT = "output"
+# print basedir
+BASEDIR = os.path.dirname(os.path.abspath(__file__))
+PATH_OUTPUT = os.path.join(BASEDIR, "output")
 PATH_POSTIVE = os.path.join(PATH_OUTPUT, "prompts_positive.txt")
 PATH_NEGATIVE = os.path.join(PATH_OUTPUT, "prompts_negative.txt")
 PATH_BACKUP = os.path.join(PATH_OUTPUT, "prompts_backup.txt")
