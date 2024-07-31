@@ -13,8 +13,10 @@ import streamlit as st
 import ollama
 from pydantic import BaseModel, Field, ValidationError
 
+
 from modules.prompts_system import prompt_system_chat, prompt_system_create, prompt_system_vision
 from modules.subjects import subjects
+from modules.version import version, ollama_version, ollama_latest, streamlit_version, strealit_latest
 
 VERSION = "0.2.2"
 # print basedir
@@ -31,6 +33,16 @@ class Prompt(BaseModel):
 
 class PromptsList(BaseModel):
     prompts: List[Prompt] = Field(..., description="List of prompts")
+
+@st.cache_data
+def get_version() -> tuple[str, str, str, str, str]:
+    '''
+    Returns the versions of ISA, Ollama, Ollama latest, Streamlit and Streamlit latest.
+
+    Returns:
+        str: The ollama version.
+    '''
+    return version(), ollama_version(), ollama_latest(), streamlit_version(), strealit_latest()
 
 # cache the json schema for the prompts list
 @st.cache_data
@@ -498,9 +510,21 @@ with st.sidebar:
         st.image(uploaded_file)
 
     st.markdown('---')
+
+    isa_version, o_version, o_latest, st_version, st_latest = get_version()
+
+    color_o = 'green' if ollama_version == ollama_latest else 'red'
+    color_st = 'green' if streamlit_version == ollama_latest else 'red'
+
+    str_o_latest = "Ollama is up to date" if ollama_version == ollama_latest else f"A new version of Ollama is available: {o_latest}"
+    str_st_latest = "Streamlit is up to date" if streamlit_version == ollama_latest else f"A new version of Streamlit is available: {st_latest}"
+    
     col_1, col_2 = st.columns((1, 2))
-    col_1.markdown(f"<p style='font-size: 12px;'>Version {VERSION}</p>", unsafe_allow_html=True)
-    col_2.markdown(f"<p style='text-align: right; font-size: 12px;'>Powered by <a href='https://ollama.com/' target='_blank'>Ollama</a> & <a href='https://streamlit.io/' target='_blank'>Streamlit</a></p>", unsafe_allow_html=True)
+    col_1.markdown(f"<p style='font-size: 12px;'>Version {isa_version}</p>", unsafe_allow_html=True)
+    col_2.markdown(f"<p style='text-align: right; font-size: 12px;'>Powered by<br><a href='https://ollama.com/' target='_blank'>Ollama {o_version}</a><br><a href='https://streamlit.io/' target='_blank'>Streamlit {st_version}</a></p>", unsafe_allow_html=True)
+
+    st.markdown(f"<p style='text-align: right; font-size: 12px; color: {color_o};'>{str_o_latest}<br><span style='color: {color_st};'>{str_st_latest}</span></p>", unsafe_allow_html=True)
+    
 
 ################
 # PAGE CONTENT #
