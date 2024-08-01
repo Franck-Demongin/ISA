@@ -513,11 +513,11 @@ with st.sidebar:
 
     isa_version, o_version, o_latest, st_version, st_latest = get_version()
 
-    color_o = 'green' if ollama_version == ollama_latest else 'red'
-    color_st = 'green' if streamlit_version == ollama_latest else 'red'
+    color_o = 'green' if o_version == o_latest else 'red'
+    color_st = 'green' if st_version == st_latest else 'red'
 
-    str_o_latest = "Ollama is up to date" if ollama_version == ollama_latest else f"A new version of Ollama is available: {o_latest}"
-    str_st_latest = "Streamlit is up to date" if streamlit_version == ollama_latest else f"A new version of Streamlit is available: {st_latest}"
+    str_o_latest = "Ollama is up to date" if o_version == o_latest else f"A new version of Ollama is available: {o_latest}"
+    str_st_latest = "Streamlit is up to date" if st_version == st_latest else f"A new version of Streamlit is available: {st_latest}"
     
     col_1, col_2 = st.columns((1, 2))
     col_1.markdown(f"<p style='font-size: 12px;'>Version {isa_version}</p>", unsafe_allow_html=True)

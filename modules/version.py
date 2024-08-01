@@ -1,6 +1,8 @@
 import requests
 import subprocess
 
+VERSION = '0.2.3'
+
 def version() -> str:
     """
     Get the version number of ISA.
@@ -8,7 +10,7 @@ def version() -> str:
     Returns:
         str: The version number of ISA.
     """
-    return '0.2.2'
+    return VERSION
 
 def ollama_latest() -> str:
     """

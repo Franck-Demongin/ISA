@@ -5,7 +5,7 @@
 
 # ISA 
 
-**Version: 0.2.2**
+**Version: 0.2.3**
 
 ISA creates prompts to generate images with SDXL Stable Diffusion models.
 It work locally with Ollama LLM model like llam3 or Mistral. 
@@ -70,6 +70,18 @@ If ISA was downloaded as a ZIP archive, download the new ZIP version, save the _
 Re-install the dependencies:
 ```bash
 pip install -r requirements.txt
+```
+
+### Launcher
+
+To make launching ISA easier, you can use the file isa_launcher.(sh | bat).
+
+On Linux or Mac, make the file executable. Open a terminal in the ISA installation directory.
+```bash
+# make the file executable
+chmod +x isa_launcher.sh
+# launch ISA
+./isa_launcher.sh
 ```
 
 ## Models
@@ -148,6 +160,12 @@ The second way save the prompts in _prompts_positive.txt_ and _prompts_negative.
 You can also copy individual prompts to the clipboard for easy use in the UI you're using.
 
 ## Changelog
+
+### 0.2.3 - 2024-08-01
+__Changed:__
+- Display Ollama and Streamlit versions in the sidebar. Check if they're up to date, and display the latest stable version otherwise.
+- Add isa_launcher.sh and isa_launcher.bat. An easy way to start ISA on Linux, Mac (use .sh) and Windows (use .bat)
+This launchers come with a set of icons.
 
 ### 0.2.2 - 2024-06-19
 __Changed:__
