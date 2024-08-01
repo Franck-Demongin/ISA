@@ -520,8 +520,8 @@ with st.sidebar:
     str_st_latest = "Streamlit is up to date" if st_version == st_latest else f"A new version of Streamlit is available: {st_latest}"
     
     col_1, col_2 = st.columns((1, 2))
-    col_1.markdown(f"<p style='font-size: 12px;'>Version {isa_version}</p>", unsafe_allow_html=True)
-    col_2.markdown(f"<p style='text-align: right; font-size: 12px;'>Powered by<br><a href='https://ollama.com/' target='_blank'>Ollama {o_version}</a><br><a href='https://streamlit.io/' target='_blank'>Streamlit {st_version}</a></p>", unsafe_allow_html=True)
+    col_1.markdown(f"<p style='font-size: 12px;'>Version <a href='https://github.com/Franck-Demongin/ISA' target='_blank'>{isa_version}</a></p>", unsafe_allow_html=True)
+    col_2.markdown(f"<p style='text-align: right; font-size: 12px;'>Powered by<br><a href='https://ollama.com/' target='_blank'>Ollama {o_version}</a> & <a href='https://streamlit.io/' target='_blank'>Streamlit {st_version}</a></p>", unsafe_allow_html=True)
 
     st.markdown(f"<p style='text-align: right; font-size: 12px; color: {color_o};'>{str_o_latest}<br><span style='color: {color_st};'>{str_st_latest}</span></p>", unsafe_allow_html=True)
     

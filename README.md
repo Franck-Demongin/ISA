@@ -18,7 +18,7 @@ Here an example of prompt it can generate:
 > Create 1 prompt about: A superhero squirrel saving the day
 >
 > R.
->Positive: "oil painting of a (superhero:1.3), squirrel standing heroically, city skyline in the background, realistic textures on fur and building, warm color palette, sharp focus, high detail, 4k resolution"
+> Positive: "oil painting of a (superhero:1.3), squirrel standing heroically, city skyline in the background, realistic textures on fur and building, warm color palette, sharp focus, high detail, 4k resolution"
 > 
 > Negative: "poor lighting, blurry, distorted, low quality, signature, watermark, text, logo"
 
