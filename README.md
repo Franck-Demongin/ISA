@@ -164,6 +164,8 @@ Load an image, select the vision model and ask your question. Redo the same imag
 
 Click on *Reload* to replay a request.
 
+![edit_request](https://github.com/user-attachments/assets/25ab802a-a004-4478-ab4d-b2c86727dab5)
+
 You can modify a request by clicking on *Edit* button.
 Modify the request in the pop-up window and confirm by clicking on "Submit". The new request is immediately taken into account.
 
