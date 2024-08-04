@@ -11,6 +11,7 @@ import uuid
 import pyperclip
 import streamlit as st
 import ollama
+from PIL import Image
 from pydantic import BaseModel, Field, ValidationError
 
 
@@ -18,13 +19,14 @@ from modules.prompts_system import prompt_system_chat, prompt_system_create, pro
 from modules.subjects import subjects
 from modules.version import version, ollama_version, ollama_latest, streamlit_version, strealit_latest
 
-VERSION = "0.2.2"
 # print basedir
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
 PATH_OUTPUT = os.path.join(BASEDIR, "output")
 PATH_POSTIVE = os.path.join(PATH_OUTPUT, "prompts_positive.txt")
 PATH_NEGATIVE = os.path.join(PATH_OUTPUT, "prompts_negative.txt")
 PATH_BACKUP = os.path.join(PATH_OUTPUT, "prompts_backup.txt")
+
+FAVICON = os.path.join(BASEDIR, "favicon.png")
 
 # create class to strore prompts
 class Prompt(BaseModel):
@@ -286,6 +288,22 @@ def copy_prompt(prompt: str) -> None:
         prompt (str): The prompt to copy.
     """
     pyperclip.copy(prompt)
+
+@st.dialog("Edit prompt")
+def edit_prompt(prompt: str) -> None:
+    """
+    Edit prompt.
+
+    This function edits the prompt in the session state.
+
+    Args:
+        prompt (str): The prompt to edit.
+    """
+    edit = st.text_area(label="Edit prompt", value=prompt, key="edit_input")
+    if st.button("Submit", type="primary"):
+        st.session_state.prompt = edit
+        st.rerun()
+    
     
 def display_prompts(prompts_list: PromptsList, output_error: bool = False) -> bool:
     """
@@ -302,18 +320,32 @@ def display_prompts(prompts_list: PromptsList, output_error: bool = False) -> bo
     """
     try:        
         for index, prompt in enumerate(prompts_list.prompts):
-            col_1, col_2 = st.columns((4, 1))
+            col_1, col_2 = st.columns((10, 1))
             with col_1:
                 st.write(f":green[Positive {index + 1}]", unsafe_allow_html=True)
             with col_2:
-                st.button("Copy", on_click=copy_prompt, args=[prompt.positive], key=f"copy_{uuid.uuid4()}", use_container_width=True)                
+                st.button(
+                    ":material/content_copy:", 
+                    on_click=copy_prompt, 
+                    args=[prompt.positive], 
+                    key=f"copy_{uuid.uuid4()}", 
+                    use_container_width=True,
+                    help="Copy positive prompt"
+                )                
             st.write(f"{prompt.positive}", unsafe_allow_html=True)
             
-            col_1, col_2 = st.columns((4, 1))
+            col_1, col_2 = st.columns((10, 1))
             with col_1:
                 st.write(f":red[Negative {index + 1}]", unsafe_allow_html=True)
             with col_2:
-                st.button("Copy", on_click=copy_prompt, args=[prompt.negative], key=f"copy_{uuid.uuid4()}", use_container_width=True)                
+                st.button(
+                    ":material/content_copy:", 
+                    on_click=copy_prompt, 
+                    args=[prompt.negative], 
+                    key=f"copy_{uuid.uuid4()}", 
+                    use_container_width=True, 
+                    help="Copy negative prompt"
+                )                
             st.write(f"{prompt.negative}", unsafe_allow_html=True)
             
             st.markdown("<hr style='margin-top: 0px; margin-bottom: 0px;'>", unsafe_allow_html=True)
@@ -344,7 +376,50 @@ def display_prompts(prompts_list: PromptsList, output_error: bool = False) -> bo
             st.write("No prompts found. Aborded.")
         return False
 
-def save_response(response: str, placeholder: st.empty) -> None:
+def reload_prompt(request: str) -> None:
+    """
+    Reload prompt.
+
+    This function reloads the prompt in the session state.
+
+    Args:
+        request (str): The request to reload.
+    """
+    st.session_state.prompt = request
+
+def display_request(request: str) -> None:
+    """
+    Display request.
+
+    This function displays the request in the session state.
+
+    Args:
+        request (str): The request to display.
+    """
+    with st.chat_message("user"):
+        col_1, col_2, col_3 = st.columns((9, 1, 1), vertical_alignment="top")
+        with col_1:
+                st.write(request)
+        with col_2:
+            st.button(
+                ":material/restart_alt:", 
+                on_click=reload_prompt, 
+                args=[request], 
+                key=f"edit_{uuid.uuid4()}", 
+                use_container_width=True,
+                help="Reload prompt"
+            )
+        with col_3:
+            st.button(
+                ":material/edit:", 
+                on_click=edit_prompt, 
+                args=[request], 
+                key=f"edit_{uuid.uuid4()}", 
+                use_container_width=True,
+                help="Edit prompt"
+            )
+
+def save_response(response: str, placeholder=st.empty) -> None:
     '''
     Save response.
 
@@ -413,9 +488,11 @@ def clear_memory() -> None:
 ##############
 # PAGE SETUP #
 ##############
+img_logo = Image.open(FAVICON)
 st.set_page_config(
     page_title="ISA",
-    page_icon=":large_blue_circle:",
+    # page_icon=":large_blue_circle:",
+    page_icon=img_logo,
     layout="centered"
 )
 
@@ -536,7 +613,7 @@ if model is None:
 
     st.stop()
 
-prompt = st.chat_input("Say something")
+prompt = st.chat_input("Input your prompt", key="prompt_input")
 
 if prompt is not None:
     st.session_state.prompt = prompt
@@ -569,7 +646,9 @@ else:
         if message['role'] == 'system':
             message['content'] = get_prompt_system(generate_prompt)
         else:
-            if message['role'] == 'assistant' and \
+            if message['role'] == 'user':
+                display_request(message['content'])
+            elif message['role'] == 'assistant' and \
                 message['content'].strip().startswith("{") and \
                 message['content'].strip().endswith("}"):
                     with st.chat_message("assistant"):
@@ -580,9 +659,8 @@ else:
                 st.chat_message(message['role']).write(message['content'])
 
     if st.session_state.prompt:
-        with st.chat_message("user"):
-            st.write(st.session_state.prompt)
-                
+        display_request(st.session_state.prompt)
+                        
         content = get_content(vision_model=vision_model, image=uploaded_file, prompt=st.session_state.prompt)
 
         st.session_state['messages'].append({'role': 'user', 'content': content})
