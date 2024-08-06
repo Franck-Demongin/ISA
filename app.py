@@ -660,7 +660,6 @@ with st.sidebar:
 ################
 # PAGE CONTENT #
 ################
-print(f"PAGE CONTENT > Mode: {st.session_state.prompt_mode}")
 st.session_state.messages[0]['content'] = get_prompt_system(generate_prompt, st.session_state.prompt_mode)
 
 if model is None:
