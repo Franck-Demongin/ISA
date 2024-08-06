@@ -1,5 +1,4 @@
-![ISA_Hero](https://github.com/Franck-Demongin/ISA/assets/54265936/0836dded-3272-4ddf-abff-3e1b13dda044)
-
+![isa_hero](https://github.com/user-attachments/assets/6fddcdd5-1154-4dc5-bb30-496ebae5f962)
 
 <img src="https://img.shields.io/badge/Python-3.10-blue" /> <img src="https://img.shields.io/badge/Ollama-orange" /> <img src="https://img.shields.io/badge/Streamlit-blue" /> [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
 
@@ -120,7 +119,7 @@ For the vison model, you can get a try to :
 
 ## Usage
 
-![ISA_1](https://github.com/Franck-Demongin/ISA/assets/54265936/dc90a7fa-7946-4983-bcd5-e6d877ed25cb)
+![UI](https://github.com/user-attachments/assets/06d7c9d8-050c-4f11-9431-ee4930cbe279)
 
 To launch the WebUI, open a terminal in the ISA folder, activate the virtual environment and type:
 ```:bash
