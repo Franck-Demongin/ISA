@@ -17,7 +17,7 @@ from pydantic import BaseModel, Field, ValidationError
 
 from modules.prompts_system import prompt_system_chat, prompt_system_create, prompt_system_flux, prompt_system_vision
 from modules.subjects import subjects
-from modules.version import version, ollama_version, ollama_latest, streamlit_version, strealit_latest
+from modules.version import version, isa_latest, ollama_version, ollama_latest, streamlit_version, strealit_latest
 
 # print basedir
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
@@ -44,14 +44,14 @@ class PromptsFluxList(BaseModel):
     prompts: List[PromptFlux] = Field(..., description="List of prompts")
 
 @st.cache_data
-def get_version() -> tuple[str, str, str, str, str]:
+def get_version() -> tuple[str, str, str, str, str, str]:
     '''
-    Returns the versions of ISA, Ollama, Ollama latest, Streamlit and Streamlit latest.
+    Returns the versions of ISA, ISA latest, Ollama, Ollama latest, Streamlit and Streamlit latest.
 
     Returns:
-        str: The ollama version.
+        str: a tuple of the versions of ISA, ISA latest, Ollama, Ollama latest, Streamlit and Streamlit latest.
     '''
-    return version(), ollama_version(), ollama_latest(), streamlit_version(), strealit_latest()
+    return version(), isa_latest(), ollama_version(), ollama_latest(), streamlit_version(), strealit_latest()
 
 # cache the json schema for the prompts list
 @st.cache_data
@@ -172,10 +172,6 @@ def get_prompt_system(generate_prompt: bool = True, prompt_model: str = 'SDXL') 
     if generate_prompt:
         if prompt_model == 'SDXL':
             schema = get_prompt_schema()
-#             prompt_schema = """
-# """ + schema + """
-# ```"""
-            # prompt_system = prompt_system_create + prompt_schema
             prompt_system = prompt_system_create.replace(r'{schema}', schema)
         elif prompt_model == 'Flux':
             schema = get_prompt_flux_schema()
@@ -255,10 +251,6 @@ def get_prompts() -> tuple[BaseModel,str]:
             print()
             messages = st.session_state['messages'] + [{'role': 'user', 'content': f"Please correct the JSON output; errors encountered:\n{e}"}]
 
-
-    # Return the content of the response
-    # return response['message']['content']
-
 def get_content(vision_model: str, image: str, prompt: str) -> str:
     """
     Get content from the ollama generate API.
@@ -314,7 +306,7 @@ def copy_prompt(prompt: str) -> None:
     pyperclip.copy(prompt)
 
 @st.dialog("Edit prompt")
-def edit_prompt(prompt: str) -> None:
+def edit_prompt(prompt: str, mode: str) -> None:
     """
     Edit prompt.
 
@@ -325,7 +317,9 @@ def edit_prompt(prompt: str) -> None:
     """
     edit = st.text_area(label="Edit prompt", value=prompt, key="edit_input")
     if st.button("Submit", type="primary"):
+        st.session_state.messages[0]['content'] = get_prompt_system(generate_prompt, mode)
         st.session_state.prompt = edit
+        st.session_state.prompt_mode = mode
         st.rerun()
 
 def validate_message(message: str) -> tuple[BaseModel, str]:
@@ -459,7 +453,7 @@ def display_request(request: str) -> None:
             st.button(
                 ":material/edit:", 
                 on_click=edit_prompt, 
-                args=[request], 
+                args=[request, st.session_state.prompt_mode], 
                 key=f"edit_{uuid.uuid4()}", 
                 use_container_width=True,
                 help="Edit prompt"
@@ -644,24 +638,31 @@ with st.sidebar:
 
     st.markdown('---')
 
-    isa_version, o_version, o_latest, st_version, st_latest = get_version()
+    i_version, i_latest, o_version, o_latest, st_version, st_latest = get_version()
 
-    color_o = 'green' if o_version == o_latest else 'red'
-    color_st = 'green' if st_version == st_latest else 'red'
+    color_i = 'green' if i_version >= i_latest else 'red'
+    color_o = 'green' if o_version >= o_latest else 'red'
+    color_st = 'green' if st_version >= st_latest else 'red'
 
-    str_o_latest = "Ollama is up to date" if o_version == o_latest else f"A new version of Ollama is available: {o_latest}"
-    str_st_latest = "Streamlit is up to date" if st_version == st_latest else f"A new version of Streamlit is available: {st_latest}"
+    str_isa_latest = "ISA is up to date" if i_version >= i_latest else f"A new version of ISA is available: {i_latest}"
+    str_o_latest = "Ollama is up to date" if o_version >= o_latest else f"A new version of Ollama is available: {o_latest}"
+    str_st_latest = "Streamlit is up to date" if st_version >= st_latest else f"A new version of Streamlit is available: {st_latest}"
     
     col_1, col_2 = st.columns((1, 2))
-    col_1.markdown(f"<p style='font-size: 12px;'>Version <a href='https://github.com/Franck-Demongin/ISA' target='_blank'>{isa_version}</a></p>", unsafe_allow_html=True)
+    col_1.markdown(f"<p style='font-size: 12px;'>Version <a href='https://github.com/Franck-Demongin/ISA' target='_blank'>{i_version}</a></p>", unsafe_allow_html=True)
     col_2.markdown(f"<p style='text-align: right; font-size: 12px;'>Powered by<br><a href='https://ollama.com/' target='_blank'>Ollama {o_version}</a> & <a href='https://streamlit.io/' target='_blank'>Streamlit {st_version}</a></p>", unsafe_allow_html=True)
 
-    st.markdown(f"<p style='text-align: right; font-size: 12px; color: {color_o};'>{str_o_latest}<br><span style='color: {color_st};'>{str_st_latest}</span></p>", unsafe_allow_html=True)
+    st.markdown(f"""<p style='text-align: right; font-size: 12px; color: {color_i};'>{str_isa_latest}<br>
+    <span style='color: {color_st};'>{str_st_latest}</span><br>
+    <span style='color: {color_o};'>{str_o_latest}</span></p>""", unsafe_allow_html=True)
     
 
 ################
 # PAGE CONTENT #
 ################
+print(f"PAGE CONTENT > Mode: {st.session_state.prompt_mode}")
+st.session_state.messages[0]['content'] = get_prompt_system(generate_prompt, st.session_state.prompt_mode)
+
 if model is None:
     st.markdown('<h1 style="font-size: 36px; padding-bottom: 0px; letter-spacing: 15px; font-weight: 600; line-height: 0.75em;">I S A<br><small style="font-size: 14px; letter-spacing: 6px;">PROMPT  GENERATOR</small></h1>', unsafe_allow_html=True)
     st.markdown('---')
@@ -699,21 +700,18 @@ if len(st.session_state.messages) < 2 and st.session_state.prompt is None:
             st.button('Random', on_click=clear_history, key="next_subject", use_container_width=True, type='primary')
 else:
     for index, message in enumerate(st.session_state.messages):
-        if message['role'] == 'system':
-            message['content'] = get_prompt_system(generate_prompt, st.session_state.prompt_mode)
-        else:
-            if message['role'] == 'user':
-                display_request(message['content'])
-            elif message['role'] == 'assistant' and \
-                message['content'].strip().startswith("{") and \
-                message['content'].strip().endswith("}"):
-                    with st.chat_message("assistant"):    
-                        prompt_validated, mode = validate_message(message['content'])     
-                        if display_prompts(prompt_validated, output_error=True, prompt_mode=mode): 
-                            st.button("Save", on_click=save_response, args=[message['content'], placeholder], key=f"save_response_{index}")
-                
-            else:
-                st.chat_message(message['role']).write(message['content'])
+        if message['role'] == 'user':
+            display_request(message['content'])
+        elif message['role'] == 'assistant' and \
+            message['content'].strip().startswith("{") and \
+            message['content'].strip().endswith("}"):
+                with st.chat_message("assistant"):    
+                    prompt_validated, mode = validate_message(message['content'])     
+                    if display_prompts(prompt_validated, output_error=True, prompt_mode=mode): 
+                        st.button("Save", on_click=save_response, args=[message['content'], placeholder], key=f"save_response_{index}")
+            
+        elif message['role'] == 'assistant':
+            st.chat_message(message['role']).write(message['content'])
 
     if st.session_state.prompt:
         display_request(st.session_state.prompt)

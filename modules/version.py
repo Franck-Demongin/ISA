@@ -1,7 +1,16 @@
 import requests
 import subprocess
 
-VERSION = '0.2.4'
+VERSION = '0.2.5'
+
+def isa_latest() -> str:
+    """
+    Get the latest version number of ISA.
+    Returns:
+        str: The version number of ISA.
+    """
+    response = requests.get('https://github.com/Franck-Demongin/ISA/releases/latest')
+    return response.url.split('/')[-1][1:]
 
 def version() -> str:
     """

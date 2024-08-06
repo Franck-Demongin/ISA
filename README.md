@@ -5,9 +5,9 @@
 
 # ISA 
 
-**Version: 0.2.4**
+**Version: 0.2.5**
 
-ISA creates prompts to generate images with SDXL Stable Diffusion models.
+ISA creates prompts to generate images with SDXL Stable Diffusion and Flux models.  
 It work locally with Ollama LLM model like llam3 or Mistral. 
 
 Here an example of prompt it can generate:
@@ -130,13 +130,18 @@ The WebUI should open in a new tab of your browser.
 
 Select a LLM in the list and a vision model (only required for image analysis)
 
-ISA operates in 2 modes:
-- _CHAT_ You can have an informal chat with him.
-- _PROMPT GENERATOR_ where it specializes in responding with well-formatted prompts (positive and negative)
+**ISA operates in 2 modes:**
+
+- _CHAT_ You can have an informal chat with ISA.
+- _PROMPT GENERATOR_ where it specializes in responding with well-formatted prompts (SDXL, positive and negative or Flux, positive)
 
 You can switch modes using the _Generate prompt_ selector in the sidebar at any time. ISA has a certain amount of memory which it shares between the two modes.  
 
 For example, you can start asking for 2 messages on a sports car in message mode, then switch to chat mode to reply to ISA on the messages generated.
+
+**Prompt SDXL or Flux**
+
+When generating the prompt, ISA can use 2 modes: *SDXL* or *Flux*. The messages generated are slightly different, and there is no negative prompt with *Flux* mode.
 
 ### Good practices
 
@@ -180,6 +185,11 @@ The second way save the prompts in _prompts_positive.txt_ and _prompts_negative.
 You can also copy individual prompts to the clipboard for easy use in the UI you're using.
 
 ## Changelog
+
+### 0.2.5 - 2024-08-06
+__Changer:__
+- Add mode to create prompts for SDXL or Flux model
+- Display ISA latest version number
 
 ### 0.2.4 - 2024-08-04
 __Changer:__
