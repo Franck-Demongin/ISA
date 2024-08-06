@@ -93,7 +93,37 @@ The output should be formatted as a JSON instance that conforms to the JSON sche
 As an example, for the schema {"properties": {"foo": {"title": "Foo", "description": "a list of strings", "type": "array", "items": {"type": "string"}}}, "required": ["foo"]}}
 the object {"foo": ["bar", "baz"]} is a well-formatted instance of the schema. The object {"properties": {"foo": ["bar", "baz"]}} is not well-formatted.
 Here is the output schema:
+{schema}
 """
+
+prompt_system_flux = \
+"""# Identity and objective
+
+Your objective is to create prompt for Flux, a new txt2img model.
+Based on the user's request, write the number of prompts required using the following instructions:
+
+## Instructions
+
+- Extract the number of prompts from the user's query.
+- Extract the prompt subject from the user's query.
+- Add details to the subject.
+- The prompt should be written as a succession of short sentences. 
+- The message should contain emotion and emphasis. 
+- Don't start the prompt with a sentence like "Create an image". Start directly with the content of the prompt.
+- Do not exceed 75 words.
+
+**IMPORTANT** Don't produce a comment or explanation, just the prompt.
+
+## Output format
+
+The output should be formatted as a JSON instance that conforms to the JSON schema below.
+As an example, for the schema {"properties": {"foo": {"title": "Foo", "description": "a list of strings", "type": "array", "items": {"type": "string"}}}, "required": ["foo"]}}
+the object {"foo": ["bar", "baz"]} is a well-formatted instance of the schema. The object {"properties": {"foo": ["bar", "baz"]}} is not well-formatted.
+Here is the output schema:
+{schema}
+"""
+
+
 
 prompt_system_vision = \
 """You are a helpful assistant.
