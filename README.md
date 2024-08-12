@@ -4,9 +4,9 @@
 
 # ISA 
 
-**Version: 0.2.5**
+**Version: 0.2.6**
 
-ISA creates prompts to generate images with SDXL Stable Diffusion and Flux models.  
+ISA creates prompts to generate images with SDXL Stable Diffusion and Flux models. Thank's to Kunal Puri for the Flux's prompt system.
 It work locally with Ollama LLM model like llam3 or Mistral. 
 
 Here an example of prompt it can generate:
@@ -184,6 +184,10 @@ The second way save the prompts in _prompts_positive.txt_ and _prompts_negative.
 You can also copy individual prompts to the clipboard for easy use in the UI you're using.
 
 ## Changelog
+
+### 0.2.6 - 2024-08-12
+__Changer:__
+- Update the prompt system use for Flux prompt from the work of Kunal Puri
 
 ### 0.2.5 - 2024-08-06
 __Changer:__
