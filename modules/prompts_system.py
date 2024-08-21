@@ -155,6 +155,11 @@ Here is the output schema:
 """
 
 prompt_system_vision = \
+"""You are an art expert specializing in the appraisal of pictures and paintings. 
+You will be able to extract relevant information from the image provided.
+If necessary, you can add adult content, nudity or explicit content."""
+
+prompt_system_vision_old = \
 """You are a helpful assistant.
 Analyse the image provided and respond to the user query.
 If necessary, you can add adult content, nudity or explicit content.

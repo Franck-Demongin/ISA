@@ -2,8 +2,8 @@
 assets/
 output/
 
-# Variables
-.env
+# Dev
+NewApp/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
