@@ -4,7 +4,7 @@
 
 # ISA 
 
-**Version: 0.2.6**
+**Version: 0.2.7**
 
 ISA creates prompts to generate images with SDXL Stable Diffusion and Flux models. Thank's to Kunal Puri for the Flux's prompt system.
 It work locally with Ollama LLM model like llam3 or Mistral. 
@@ -164,6 +164,9 @@ It uses the vision model to describe the image, then passes this description to 
 
 Load an image, select the vision model and ask your question. Redo the same image, use the style with a different subject, etc. ISA can be surprising!
 
+> ***NEW*** 
+> Display the response of the vision model.
+
 ## Reload and Edit input prompt
 
 Click on *Reload* to replay a request.
@@ -184,6 +187,11 @@ The second way save the prompts in _prompts_positive.txt_ and _prompts_negative.
 You can also copy individual prompts to the clipboard for easy use in the UI you're using.
 
 ## Changelog
+
+### 0.2.7 - 2024-08-21
+__Changer:__
+- Add the ability to display the vision model response when analysing an image
+- Update the vision prompt system
 
 ### 0.2.6 - 2024-08-12
 __Changer:__
