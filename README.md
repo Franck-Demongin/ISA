@@ -119,7 +119,7 @@ For the vison model, you can get a try to :
 
 ## Usage
 
-![UI](https://github.com/user-attachments/assets/06d7c9d8-050c-4f11-9431-ee4930cbe279)
+![UI_0-2-7](https://github.com/user-attachments/assets/cf688e61-a292-4518-84ec-5d7bf37f2e01)
 
 To launch the WebUI, open a terminal in the ISA folder, activate the virtual environment and type:
 ```:bash
