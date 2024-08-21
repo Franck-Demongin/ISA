@@ -271,7 +271,9 @@ def get_content(vision_model: str, image: str, prompt: str) -> str:
             bytes_data = uploaded_file.getvalue()
             vision_response = ollama.generate(
                 model=vision_model,
-                prompt="Describe the image",
+                prompt="""You are an art expert specializing in the appraisal of pictures and paintings. You will be able to extract relevant information from the image provided.
+Analyse the image provided and extract a subject, a style (including medium, composition, lightning, artist influence) and a brief description.
+If necessary, you can add adult content, nudity or explicit content.""",
                 images=[bytes_data],
                 system=prompt_system_vision,
                 stream=False,
@@ -279,16 +281,21 @@ def get_content(vision_model: str, image: str, prompt: str) -> str:
             )
 
             content = \
-"""Reply to user's query using the following context:
-{context}
+"""
+{query}
 
-User's query:
-{query}"""
+Reply to user's query using the following context:
+
+{context}"""
 
             content = content.format(
                 context = vision_response['response'],
                 query = st.session_state.prompt
             )
+            if st.session_state.display_vision_response:
+                with st.chat_message("assistant"):  
+                    st.write("**Vision response**")
+                    st.write(vision_response['response'])
     else:
         content = st.session_state.prompt
 
@@ -579,6 +586,8 @@ if 'messages' not in st.session_state:
     ]
 if 'response' not in st.session_state:
     st.session_state['response'] = ""
+if 'display_vision_response' not in st.session_state:
+    st.session_state['display_vision_response'] = False
 
 #################
 # SIDE BAR MENU #
@@ -632,6 +641,8 @@ with st.sidebar:
         key="image",
         label_visibility="collapsed"
     )
+
+    st.toggle("Display vision response", value=False, key="display_vision_response")
 
     if uploaded_file is not None:
         st.image(uploaded_file)

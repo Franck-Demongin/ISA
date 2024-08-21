@@ -1,7 +1,7 @@
 import requests
 import subprocess
 
-VERSION = '0.2.5'
+VERSION = '0.2.7'
 
 def isa_latest() -> str:
     """
