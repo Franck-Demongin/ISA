@@ -4,7 +4,7 @@
 
 # ISA 
 
-**Version: 0.2.7**
+**Version: 0.2.8**
 
 ISA creates prompts to generate images with SDXL Stable Diffusion and Flux models. Thank's to Kunal Puri for the Flux's prompt system.
 It work locally with Ollama LLM model like llam3 or Mistral. 
@@ -188,6 +188,15 @@ You can also copy individual prompts to the clipboard for easy use in the UI you
 
 ## Changelog
 
+### 0.2.8 - 2024-09-10
+__Changer:__
+- Add support for a new vision model Minicpm-v
+
+__Fixed:__
+- Does not block the application if the latest version of ISA, Ollama or Streamlit is not available
+- Fixes a bug in version number comparison
+- Clears the prompts_negative.txt file when there are no negative prompts
+
 ### 0.2.7 - 2024-08-21
 __Changer:__
 - Add the ability to display the vision model response when analysing an image
@@ -218,8 +227,6 @@ This launchers come with a set of icons.
 __Changed:__
 - Add a "Copy" button next to each prompt to easily copy them to the clipboard.
 
-__Fixed:__
-
 ### 0.2.1 - 2024-06-17
 __Changed:__
 - Use Pydantic to define and validate the output format. Increases reliability and prevents errors during processing, 
@@ -232,4 +239,3 @@ __Fixed:__
 __Changed:__
 - First public version of ISA
 
-__Fixed:__

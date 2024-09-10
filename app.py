@@ -17,7 +17,7 @@ from pydantic import BaseModel, Field, ValidationError
 
 from modules.prompts_system import prompt_system_chat, prompt_system_create, prompt_system_flux, prompt_system_vision
 from modules.subjects import subjects
-from modules.version import version, isa_latest, ollama_version, ollama_latest, streamlit_version, strealit_latest
+from modules.version import version, isa_latest, ollama_version, ollama_latest, streamlit_version, strealit_latest, compare_version
 
 # print basedir
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
@@ -97,7 +97,8 @@ def get_models_list() -> List[str]:
               (
                   not model['name'].startswith('llava') and
                   not model['name'].startswith('moondream') and 
-                  not model['name'].startswith('GFalcon-UA/nous-hermes-2-vision')
+                  not model['name'].startswith('GFalcon-UA/nous-hermes-2-vision') and
+                  not model['name'].startswith('minicpm-v')
                 )]
                 
             # (model['name'].startswith('llava') or model['name'].startswith('moondream'))]
@@ -124,14 +125,15 @@ def get_vision_models_list() -> List[str]:
         List[str]: A list of available LLM models for image vision.
     """
     # List of models that are suitable for image vision
-    models_list = ['llava', 'llava-phi3', 'llava-llama3', 'moondream', 'GFalcon-UA/nous-hermes-2-vision']
+    models_list = ['llava', 'llava-phi3', 'llava-llama3', 'moondream', 'GFalcon-UA/nous-hermes-2-vision', 'minicpm-v']
 
     # Get the list of available models and filter out the ones that are not suitable
     models = [model['name'] for model in ollama.list()['models'] 
               if (
                   model['name'].startswith('llava') or 
                   model['name'].startswith('moondream') or 
-                  model['name'].startswith('GFalcon-UA/nous-hermes-2-vision')
+                  model['name'].startswith('GFalcon-UA/nous-hermes-2-vision') or
+                  model['name'].startswith('minicpm-v')
                 ) and
               not re.search('embed', model['name'], re.IGNORECASE)]
 
@@ -488,17 +490,28 @@ def save_response(response: str, placeholder=st.empty) -> None:
             f.write(prompt['positive'] + '\n')
     
     # Write negative prompts to the file
-    if mode == "SDXL":
-        with open(PATH_NEGATIVE, 'w') as f:
-            for prompt in content['prompts']:
+    # if mode == "SDXL":
+    #     with open(PATH_NEGATIVE, 'w') as f:
+    #         for prompt in content['prompts']:
+    #             f.write(prompt['negative'] + '\n')
+    # else:
+    #     with open(PATH_NEGATIVE, 'w') as f:
+    #         f.write("")
+    with open(PATH_NEGATIVE, 'w') as f:
+        for prompt in content['prompts']:
+            if 'negative' in prompt:
                 f.write(prompt['negative'] + '\n')
-    
+            else:
+                f.write("")
+
     # Append prompts to the backup file
     with open(PATH_BACKUP, 'a') as f:
         for prompt in content['prompts']:
             f.write(prompt['positive'] + '\n')
-            if mode == "SDXL":
+            if 'negative' in prompt:
                 f.write(prompt['negative'] + '\n')
+            # if mode == "SDXL":
+            #     f.write(prompt['negative'] + '\n')
             f.write('-'*20 + '\n')
     
     # Display success message
@@ -651,14 +664,30 @@ with st.sidebar:
 
     i_version, i_latest, o_version, o_latest, st_version, st_latest = get_version()
 
-    color_i = 'green' if i_version >= i_latest else 'red'
-    color_o = 'green' if o_version >= o_latest else 'red'
-    color_st = 'green' if st_version >= st_latest else 'red'
+    if i_latest == 'unknown':
+        color_i = 'red'
+        str_isa_latest = 'Latest version of ISA not available'
+    else:            
+        compare_i = compare_version(i_version, i_latest)
+        color_i = 'green' if compare_i >= 0 else 'red'
+        str_isa_latest = "ISA is up to date" if compare_i >= 0 else f"A new version of ISA is available: {i_latest}"
 
-    str_isa_latest = "ISA is up to date" if i_version >= i_latest else f"A new version of ISA is available: {i_latest}"
-    str_o_latest = "Ollama is up to date" if o_version >= o_latest else f"A new version of Ollama is available: {o_latest}"
-    str_st_latest = "Streamlit is up to date" if st_version >= st_latest else f"A new version of Streamlit is available: {st_latest}"
-    
+    if o_latest == 'unknown':
+        color_o = 'red'
+        str_o_latest = 'Latest version of Ollama not available'
+    else:
+        compare_o = compare_version(o_version, o_latest)
+        color_o = 'green' if compare_o >= 0 else 'red'
+        str_o_latest = "Ollama is up to date" if compare_o >= 0 else f"A new version of Ollama is available: {o_latest}"
+
+    if st_latest == 'unknown':
+        color_st = 'red'
+        str_st_latest = 'Latest version of Streamlit not available'
+    else:
+        compare_st = compare_version(st_version, st_latest)
+        color_st = 'green' if compare_st >= 0 else 'red'
+        str_st_latest = "Streamlit is up to date" if compare_st >= 0 else f"A new version of Streamlit is available: {st_latest}"
+
     col_1, col_2 = st.columns((1, 2))
     col_1.markdown(f"<p style='font-size: 12px;'>Version <a href='https://github.com/Franck-Demongin/ISA' target='_blank'>{i_version}</a></p>", unsafe_allow_html=True)
     col_2.markdown(f"<p style='text-align: right; font-size: 12px;'>Powered by<br><a href='https://ollama.com/' target='_blank'>Ollama {o_version}</a> & <a href='https://streamlit.io/' target='_blank'>Streamlit {st_version}</a></p>", unsafe_allow_html=True)

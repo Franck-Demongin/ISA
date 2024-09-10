@@ -1,7 +1,32 @@
 import requests
 import subprocess
 
-VERSION = '0.2.7'
+VERSION = '0.2.8'
+
+def compare_version(a: str, b: str) -> int:
+    """
+    Compare two version numbers.    
+
+    Args:
+        a (str): The first version number.
+        b (str): The second version number.
+
+    Returns:
+        int: -1 if a < b, 0 if a == b, 1 if a > b.
+    """
+    va = a.split('.')
+    vb = b.split('.')
+
+    for i in range(max(len(va), len(vb))):
+        if i >= len(va):
+            va.append('0')
+        if i >= len(vb):
+            vb.append('0')
+        if int(va[i]) < int(vb[i]):
+            return -1
+        elif int(va[i]) > int(vb[i]):
+            return 1
+    return 0
 
 def isa_latest() -> str:
     """
@@ -9,8 +34,13 @@ def isa_latest() -> str:
     Returns:
         str: The version number of ISA.
     """
-    response = requests.get('https://github.com/Franck-Demongin/ISA/releases/latest')
-    return response.url.split('/')[-1][1:]
+    try:
+        response = requests.get('https://github.com/Franck-Demongin/ISA/releases/latest')
+        if response.status_code != 200:
+            return 'unknown'
+        return response.url.split('/')[-1][1:]
+    except requests.exceptions.ConnectionError:
+        return 'unknown'
 
 def version() -> str:
     """
@@ -27,8 +57,13 @@ def ollama_latest() -> str:
     Returns:
         str: The version number of Ollama.
     """
-    response = requests.get('https://github.com/ollama/ollama/releases/latest')
-    return response.url.split('/')[-1][1:]
+    try:
+        response = requests.get('https://github.com/ollama/ollama/releases/latest')
+        if response.status_code != 200:
+            return 'unknown'
+        return response.url.split('/')[-1][1:]
+    except requests.exceptions.ConnectionError:
+        return 'unknown'
 
 def ollama_version() -> str:
     """
@@ -47,8 +82,13 @@ def strealit_latest() -> str:
     Returns:
         str: The version number of Streamlit.
     """
-    response = requests.get('https://github.com/streamlit/streamlit/releases/latest')
-    return response.url.split('/')[-1]
+    try:
+        response = requests.get('https://github.com/streamlit/streamlit/releases/latest')
+        if response.status_code != 200:
+            return 'unknown'
+        return response.url.split('/')[-1]
+    except requests.exceptions.ConnectionError:
+        return 'unknown'
 
 def streamlit_version() -> str:
     """
