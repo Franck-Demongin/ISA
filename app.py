@@ -89,6 +89,7 @@ def save_settings() -> None:
     }
     with open(PATH_SETTINGS, "w") as f:
         json.dump(settings, f, indent=4)
+        st.toast("Settings saved", icon=":material/save:")
 
 @st.cache_data
 def get_version() -> tuple[str, str, str, str, str, str]:
@@ -611,6 +612,7 @@ def clear_history() -> None:
             "content": prompt_system_chat
         }
     ]
+    st.toast("History cleared", icon=":material/delete_history:") 
 
 def clear_memory() -> None:
     '''Clear memory'''
@@ -623,6 +625,7 @@ def clear_memory() -> None:
             "num_ctx": 4096
         }
     )
+    st.toast("Memory cleared", icon=":material/memory:") 
 
 ##############
 # PAGE SETUP #
@@ -741,7 +744,7 @@ with st.sidebar:
 
     st.markdown('---')
 
-    st.button("Save settings", on_click=save_settings, key="save_settings", use_container_width=True, help="Save settings")  
+    st.button("Save settings", on_click=save_settings, key="save_settings", use_container_width=True)  
     col_1, col_2 = st.columns(2)
     col_1.button("Clear history", on_click=clear_history, key="clear_history", use_container_width=True)  
     col_2.button("Clear memory", on_click=clear_memory, key="clear_memory", use_container_width=True)  
