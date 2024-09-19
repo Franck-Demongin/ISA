@@ -25,6 +25,7 @@ PATH_OUTPUT = os.path.join(BASEDIR, "output")
 PATH_POSTIVE = os.path.join(PATH_OUTPUT, "prompts_positive.txt")
 PATH_NEGATIVE = os.path.join(PATH_OUTPUT, "prompts_negative.txt")
 PATH_BACKUP = os.path.join(PATH_OUTPUT, "prompts_backup.txt")
+PATH_SETTINGS = os.path.join(BASEDIR, "settings.json")
 
 FAVICON = os.path.join(BASEDIR, "favicon.png")
 
@@ -42,6 +43,52 @@ class PromptFlux(BaseModel):
 
 class PromptsFluxList(BaseModel):
     prompts: List[PromptFlux] = Field(..., description="List of prompts")
+
+@st.cache_data
+def load_settings() -> dict:
+    '''
+    Load settings.'''
+
+    try:
+        with open(PATH_SETTINGS) as f:
+            settings = json.load(f)
+    except FileNotFoundError:
+        settings = {}
+
+    models = get_models_list()
+    if "model" not in settings or settings["model"] not in models:
+        settings["model"] = None
+
+    models_vision = get_vision_models_list()
+    if "model_vision" not in settings or settings["model_vision"] not in models_vision:
+        settings["model_vision"] = None
+    
+    if "prompt_mode" not in settings or settings["prompt_mode"] not in ["SDXL", "Flux"]:
+        settings["prompt_mode"] = "SDXL"
+    
+    if "mode" not in settings or not isinstance(settings["mode"], bool):
+        settings["mode"] = False
+    
+    if "seed" not in settings:
+        settings["seed"] = 0
+
+    if "temperature" not in settings:
+        settings["temperature"] = 0.8
+    
+    return settings
+
+def save_settings() -> None:
+    '''Save settings.'''
+    settings = {
+        "model": st.session_state["model"],
+        "model_vision": st.session_state["model_vision"],
+        "prompt_mode": st.session_state["prompt_mode"],
+        "mode": st.session_state["mode"],
+        "seed": st.session_state["seed"],
+        "temperature": st.session_state["temperature"]
+    }
+    with open(PATH_SETTINGS, "w") as f:
+        json.dump(settings, f, indent=4)
 
 @st.cache_data
 def get_version() -> tuple[str, str, str, str, str, str]:
@@ -93,15 +140,14 @@ def get_models_list() -> List[str]:
 
     # Get the list of available models and filter out the ones that are not suitable
     models = [model['name'] for model in ollama.list()['models'] 
-              if not re.search(patern, model['name'], re.IGNORECASE) and
-              (
-                  not model['name'].startswith('llava') and
-                  not model['name'].startswith('moondream') and 
-                  not model['name'].startswith('GFalcon-UA/nous-hermes-2-vision') and
-                  not model['name'].startswith('minicpm-v')
-                )]
-                
-            # (model['name'].startswith('llava') or model['name'].startswith('moondream'))]
+        if not re.search(patern, model['name'], re.IGNORECASE) and
+        (
+            not model['name'].startswith('llava') and
+            not model['name'].startswith('moondream') and 
+            not model['name'].startswith('GFalcon-UA/nous-hermes-2-vision') and
+            not model['name'].startswith('minicpm-v')
+        )
+    ]
 
     # Remove the ":latest" suffix from the model names
     for index, model in enumerate(models):
@@ -125,7 +171,8 @@ def get_vision_models_list() -> List[str]:
         List[str]: A list of available LLM models for image vision.
     """
     # List of models that are suitable for image vision
-    models_list = ['llava', 'llava-phi3', 'llava-llama3', 'moondream', 'GFalcon-UA/nous-hermes-2-vision', 'minicpm-v']
+    # models_list = ['llava', 'llava-phi3', 'llava-llama3', 'moondream', 'GFalcon-UA/nous-hermes-2-vision', 'minicpm-v']
+    models_list = ['test']
 
     # Get the list of available models and filter out the ones that are not suitable
     models = [model['name'] for model in ollama.list()['models'] 
@@ -182,6 +229,14 @@ def get_prompt_system(generate_prompt: bool = True, prompt_model: str = 'SDXL') 
     else:
         return prompt_system_chat
 
+def calculate_seed(seed: int) -> int:
+    """
+    Calculate seed."""
+    if seed == 0:
+        return random.randint(0, 2**32)
+
+    return seed
+
 def stream_data():
     """
     Stream data from ollama.
@@ -192,10 +247,19 @@ def stream_data():
     Yields:
         str: The content of each chunk of data.
     """
+
+    # Set the seed
+    st.session_state['last_seed'] = calculate_seed(st.session_state['seed'])
+
     stream = ollama.chat(
-        model=model,
+        model=st.session_state.model,
         messages=st.session_state['messages'],
-        stream=True
+        stream=True,
+        options={
+            "seed": st.session_state['last_seed'],
+            "temperature": st.session_state['temperature'],
+            "num_ctx": 4096
+        }
     )
 
     # Iterate over each chunk of data
@@ -219,12 +283,20 @@ def get_prompts() -> tuple[BaseModel,str]:
     """
     messages = st.session_state['messages']
     attempt = 0
+
+    st.session_state['last_seed'] = calculate_seed(st.session_state['seed'])
+
     while True:
         response = ollama.chat(
-            model=model,
+            model=st.session_state.model,
             messages=messages,
             stream=False,
-            format="json"
+            format="json",
+            options={
+                "seed": st.session_state['last_seed'],
+                "temperature": st.session_state['temperature'],
+                "num_ctx": 4096
+            }
         )
 
         # validate response
@@ -272,7 +344,7 @@ def get_content(vision_model: str, image: str, prompt: str) -> str:
     if image is not None and vision_model is not None:
             bytes_data = uploaded_file.getvalue()
             vision_response = ollama.generate(
-                model=vision_model,
+                model=st.session_state.model_vision,
                 prompt="""You are an art expert specializing in the appraisal of pictures and paintings. You will be able to extract relevant information from the image provided.
 Analyse the image provided and extract a subject, a style (including medium, composition, lightning, artist influence) and a brief description.
 If necessary, you can add adult content, nudity or explicit content.""",
@@ -313,6 +385,7 @@ def copy_prompt(prompt: str) -> None:
         prompt (str): The prompt to copy.
     """
     pyperclip.copy(prompt)
+    st.toast("Copied in clipboard", icon=":material/content_copy:")
 
 @st.dialog("Edit prompt")
 def edit_prompt(prompt: str, mode: str) -> None:
@@ -325,10 +398,15 @@ def edit_prompt(prompt: str, mode: str) -> None:
         prompt (str): The prompt to edit.
     """
     edit = st.text_area(label="Edit prompt", value=prompt, key="edit_input")
+    clear = st.checkbox("Clear history", value=False, key="clear_history_checkbox")
+
     if st.button("Submit", type="primary"):
-        st.session_state.messages[0]['content'] = get_prompt_system(generate_prompt, mode)
+        if clear:
+            clear_history()
+        st.session_state.messages[0]['content'] = get_prompt_system(st.session_state.mode, mode)
         st.session_state.prompt = edit
         st.session_state.prompt_mode = mode
+
         st.rerun()
 
 def validate_message(message: str) -> tuple[BaseModel, str]:
@@ -468,13 +546,12 @@ def display_request(request: str) -> None:
                 help="Edit prompt"
             )
 
-def save_response(response: str, placeholder=st.empty) -> None:
+def save_response(response: str) -> None:
     '''
     Save response.
 
     Args:
         response (str): The response to be saved.
-        placeholder (streamlit.empty): The placeholder where success message will be displayed.
     '''
     # Load response from the JSON string
     content, mode = validate_message(response)
@@ -489,14 +566,6 @@ def save_response(response: str, placeholder=st.empty) -> None:
         for prompt in content['prompts']:
             f.write(prompt['positive'] + '\n')
     
-    # Write negative prompts to the file
-    # if mode == "SDXL":
-    #     with open(PATH_NEGATIVE, 'w') as f:
-    #         for prompt in content['prompts']:
-    #             f.write(prompt['negative'] + '\n')
-    # else:
-    #     with open(PATH_NEGATIVE, 'w') as f:
-    #         f.write("")
     with open(PATH_NEGATIVE, 'w') as f:
         for prompt in content['prompts']:
             if 'negative' in prompt:
@@ -514,13 +583,7 @@ def save_response(response: str, placeholder=st.empty) -> None:
             #     f.write(prompt['negative'] + '\n')
             f.write('-'*20 + '\n')
     
-    # Display success message
-    with placeholder.container():
-        st.success("Saved!")
-    
-    # Wait for 1.5 seconds before emptying the placeholder
-    time.sleep(1.5)
-    placeholder.empty()
+    st.toast("Saved!", icon=":material/save:")
         
 def preload_prompt(prompt: str) -> None:
     """
@@ -535,6 +598,11 @@ def preload_prompt(prompt: str) -> None:
     # Store the prompt in the session state
     st.session_state.prompt = prompt
 
+def last_seed() -> None:
+    '''Last seed'''
+    if st.session_state['last_seed']:
+        st.session_state['seed'] = st.session_state['last_seed']
+
 def clear_history() -> None:
     '''Clear history'''
     st.session_state['messages'] = [
@@ -546,7 +614,15 @@ def clear_history() -> None:
 
 def clear_memory() -> None:
     '''Clear memory'''
-    ollama.generate(model, keep_alive=0)
+    ollama.generate(
+        st.session_state.model, 
+        keep_alive=0,
+        options={
+            "seed": st.session_state['last_seed'],
+            "temperature": st.session_state['temperature'],
+            "num_ctx": 4096
+        }
+    )
 
 ##############
 # PAGE SETUP #
@@ -585,6 +661,8 @@ css = """
 st.html(css)
 
 
+settings = load_settings()
+
 ################
 # INIT SESSION #
 ################
@@ -601,6 +679,20 @@ if 'response' not in st.session_state:
     st.session_state['response'] = ""
 if 'display_vision_response' not in st.session_state:
     st.session_state['display_vision_response'] = False
+if "seed" not in st.session_state:
+    st.session_state["seed"] = settings["seed"]
+if "temperature" not in st.session_state:
+    st.session_state["temperature"] = settings["temperature"]
+if "last_seed" not in st.session_state:
+    st.session_state["last_seed"] = None
+if "model" not in st.session_state:
+    st.session_state["model"] = settings["model"]
+if "model_vision" not in st.session_state: # model_vision
+    st.session_state["model_vision"] = settings["model_vision"]
+if "prompt_mode" not in st.session_state:
+    st.session_state["prompt_mode"] = settings["prompt_mode"]
+if "mode" not in st.session_state:
+    st.session_state["mode"] = settings["mode"]
 
 #################
 # SIDE BAR MENU #
@@ -613,21 +705,21 @@ with st.sidebar:
 
     models = get_models_list()
     with col_1:
-        model = st.selectbox(
+        st.selectbox(
             "LLM", 
             models, 
             placeholder="Select a model",
             key="model"
         )
-        generate_prompt = st.toggle("Create prompt", value=True, key="generate_prompt")
+        st.toggle("Create prompt", key="mode")
     
     vision_models = get_vision_models_list()
     with col_2:
-        vision_model = st.selectbox(
+        st.selectbox(
             "Vision", 
             vision_models, 
             placeholder="Select a model",
-            key="vision_model"
+            key="model_vision"
         )
         st.selectbox(
             "Mode", 
@@ -635,16 +727,25 @@ with st.sidebar:
             placeholder="Select a mode",
             key="prompt_mode",
             label_visibility="collapsed",
-            disabled=not generate_prompt
-        )
-    
-    col_1, col_2 = st.columns(2)
-    col_1.button("Clear history", on_click=clear_history, key="clear_history", use_container_width=True)  
-    col_2.button("Clear memory", on_click=clear_memory, key="clear_memory", use_container_width=True)  
+            disabled=not st.session_state.mode
+        )    
 
     st.markdown('---')
 
-    placeholder = st.empty()
+    st.slider("Temperature", min_value=0.0, max_value=1.0, step=0.1, key="temperature")
+    col_1, col_2 = st.columns([2, 1], vertical_alignment="bottom")
+    with col_1:
+        st.number_input("Seed", min_value=0, max_value=2**32, step=1, key="seed")
+    with col_2:
+        st.button("Last seed", on_click=last_seed, key="randomize", use_container_width=True)
+
+    st.markdown('---')
+
+    st.button("Save settings", on_click=save_settings, key="save_settings", use_container_width=True, help="Save settings")  
+    col_1, col_2 = st.columns(2)
+    col_1.button("Clear history", on_click=clear_history, key="clear_history", use_container_width=True)  
+    col_2.button("Clear memory", on_click=clear_memory, key="clear_memory", use_container_width=True)  
+    
 
 
     uploaded_file = st.file_uploader(
@@ -700,9 +801,9 @@ with st.sidebar:
 ################
 # PAGE CONTENT #
 ################
-st.session_state.messages[0]['content'] = get_prompt_system(generate_prompt, st.session_state.prompt_mode)
+st.session_state.messages[0]['content'] = get_prompt_system(st.session_state.mode, st.session_state.prompt_mode)
 
-if model is None:
+if st.session_state.model is None:
     st.markdown('<h1 style="font-size: 36px; padding-bottom: 0px; letter-spacing: 15px; font-weight: 600; line-height: 0.75em;">I S A<br><small style="font-size: 14px; letter-spacing: 6px;">PROMPT  GENERATOR</small></h1>', unsafe_allow_html=True)
     st.markdown('---')
     st.write("To start use ISA, select a model in the sidebar.")
@@ -747,7 +848,7 @@ else:
                 with st.chat_message("assistant"):    
                     prompt_validated, mode = validate_message(message['content'])     
                     if display_prompts(prompt_validated, output_error=True, prompt_mode=mode): 
-                        st.button("Save", on_click=save_response, args=[message['content'], placeholder], key=f"save_response_{index}")
+                        st.button("Save", on_click=save_response, args=[message['content']], key=f"save_response_{index}")
             
         elif message['role'] == 'assistant':
             st.chat_message(message['role']).write(message['content'])
@@ -755,17 +856,23 @@ else:
     if st.session_state.prompt:
         display_request(st.session_state.prompt)
                         
-        content = get_content(vision_model=vision_model, image=uploaded_file, prompt=st.session_state.prompt)
+        content = get_content(vision_model=st.session_state.model_vision, image=uploaded_file, prompt=st.session_state.prompt)
 
         st.session_state['messages'].append({'role': 'user', 'content': content})
 
         st.session_state.response = ""  
-        if generate_prompt:
+        if st.session_state.mode:
             with st.chat_message("assistant"):
                 with st.spinner("Generating..."):
                     prompts_list, mode = get_prompts()
                     if display_prompts(prompts_list, output_error=True, prompt_mode=mode):
-                        st.button("Save", on_click=save_response, args=[st.session_state.response, placeholder], key="save_response")
+                        col_1, col_2 = st.columns(2)
+
+                        with col_1:
+                            st.button("Save", on_click=save_response, args=[st.session_state.response], key="save_response")
+                        
+                        with col_2:
+                            st.markdown(f"<p style='text-align: right; font-size: 14px; color: #CCCCCC'>Seed: {st.session_state['last_seed']} - Temperature: {st.session_state['temperature']}</p>", unsafe_allow_html=True)
             
         else:
             with st.chat_message("assistant"):

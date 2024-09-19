@@ -2,6 +2,9 @@
 assets/
 output/
 
+# Settings
+settings.json
+
 # Dev
 NewApp/
 
