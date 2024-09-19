@@ -1,13 +1,13 @@
-![isa_hero](https://github.com/user-attachments/assets/6fddcdd5-1154-4dc5-bb30-496ebae5f962)
+![isa_hero_0-2-9](https://github.com/user-attachments/assets/23bdf0e7-dbf3-412c-bcdb-5959f9197617)
 
 <img src="https://img.shields.io/badge/Python-3.10-blue" /> <img src="https://img.shields.io/badge/Ollama-orange" /> <img src="https://img.shields.io/badge/Streamlit-blue" /> [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
 
 # ISA 
 
-**Version: 0.2.8**
+**Version: 0.2.9**
 
 ISA creates prompts to generate images with SDXL Stable Diffusion and Flux models. Thank's to Kunal Puri for the Flux's prompt system.
-It work locally with Ollama LLM model like llam3 or Mistral. 
+It work locally with Ollama LLM model like Llam3 or Mistral. 
 
 Here an example of prompt it can generate:
 
@@ -68,7 +68,7 @@ If ISA was downloaded as a ZIP archive, download the new ZIP version, save the _
 
 Re-install the dependencies:
 ```bash
-pip install -r requirements.txt
+pip install -U -r requirements.txt
 ```
 
 ### Linux user
@@ -116,10 +116,11 @@ For the vison model, you can get a try to :
 - _llava_
 - _llava-llama3_
 - _llava-phi3_
+- _minicpm-v_
 
 ## Usage
 
-![UI_0-2-7](https://github.com/user-attachments/assets/cf688e61-a292-4518-84ec-5d7bf37f2e01)
+![UI_0-2-9](https://github.com/user-attachments/assets/8d8660c7-700f-4e7e-a88a-a62238386f34)
 
 To launch the WebUI, open a terminal in the ISA folder, activate the virtual environment and type:
 ```:bash
@@ -134,13 +135,25 @@ Select a LLM in the list and a vision model (only required for image analysis)
 - _CHAT_ You can have an informal chat with ISA.
 - _PROMPT GENERATOR_ where it specializes in responding with well-formatted prompts (SDXL, positive and negative or Flux, positive)
 
-You can switch modes using the _Generate prompt_ selector in the sidebar at any time. ISA has a certain amount of memory which it shares between the two modes.  
+You can switch modes using the _Create prompt_ selector in the sidebar at any time. ISA has a certain amount of memory which it shares between the two modes.  
 
 For example, you can start asking for 2 messages on a sports car in message mode, then switch to chat mode to reply to ISA on the messages generated.
 
 **Prompt SDXL or Flux**
 
 When generating the prompt, ISA can use 2 modes: *SDXL* or *Flux*. The messages generated are slightly different, and there is no negative prompt with *Flux* mode.
+
+**Seed and Temperature**
+
+_Temperature_ can be set to a value between 0 and 1. If set to 0, the model will conform to the request, at 1 it will take on more freedom (a little more creative).
+
+Choose a defined _Seed_ or leave the field at 0 to generate a random seed. The last random seed used can be reused by clicking on the Last seed button.
+
+**Save Settings**
+
+The _Save settings_ button saves settings to a file (settings.json, in the ISA directory). They will be automatically reloaded when ISA is started.
+
+Choose your preferred LLM, the multi-modal model and set the other parameters according to your preferences. Click _Save settings_ to save them.
 
 ### Good practices
 
@@ -169,12 +182,17 @@ Load an image, select the vision model and ask your question. Redo the same imag
 
 ## Reload and Edit input prompt
 
-Click on *Reload* to replay a request.
+Click on _Reload_ to replay a request.
 
-![edit_request](https://github.com/user-attachments/assets/25ab802a-a004-4478-ab4d-b2c86727dab5)
+![edit_request_0-2-9](https://github.com/user-attachments/assets/d80db6ed-9561-469d-9c74-84b62335cc69)
 
 You can modify a request by clicking on *Edit* button.
+
+The _Clear history_ option will clear ISA's history, losing the previous discussion, before generating a new prompt. This option allows you to restart or edit a request without taking previous exchanges into account. 
+
 Modify the request in the pop-up window and confirm by clicking on "Submit". The new request is immediately taken into account.
+
+>Note: To reload a request and clear the history, choose _Edit_, don't change the request and select _Clear history_
 
 ## Save Prompts
 
@@ -187,6 +205,12 @@ The second way save the prompts in _prompts_positive.txt_ and _prompts_negative.
 You can also copy individual prompts to the clipboard for easy use in the UI you're using.
 
 ## Changelog
+
+### 0.2.9 - 2024-09-19
+__Changer:__
+- Add options Seed and Temperature
+- Current settings can be saved
+- When editing request, it's possible to clear the history
 
 ### 0.2.8 - 2024-09-10
 __Changer:__
