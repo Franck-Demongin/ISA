@@ -1,4 +1,4 @@
-![isa_hero_0-2-9](https://github.com/user-attachments/assets/23bdf0e7-dbf3-412c-bcdb-5959f9197617)
+![isa_hero_0-3-0](https://github.com/user-attachments/assets/f8846f50-a596-41ac-a0ed-f1dc0d5359ae)
 
 <img src="https://img.shields.io/badge/Python-3.10-blue" /> <img src="https://img.shields.io/badge/Ollama-orange" /> <img src="https://img.shields.io/badge/Streamlit-blue" /> [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
 
