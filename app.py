@@ -138,15 +138,15 @@ def get_models_list() -> List[str]:
     '''
     # Pattern to search for in model names
     patern = "embed"
-
+    
     # Get the list of available models and filter out the ones that are not suitable
-    models = [model['name'] for model in ollama.list()['models'] 
-        if not re.search(patern, model['name'], re.IGNORECASE) and
+    models = [model['model'] for model in ollama.list()['models'] 
+        if not re.search(patern, model['model'], re.IGNORECASE) and
         (
-            not model['name'].startswith('llava') and
-            not model['name'].startswith('moondream') and 
-            not model['name'].startswith('GFalcon-UA/nous-hermes-2-vision') and
-            not model['name'].startswith('minicpm-v')
+            not model['model'].startswith('llava') and
+            not model['model'].startswith('moondream') and 
+            not model['model'].startswith('GFalcon-UA/nous-hermes-2-vision') and
+            not model['model'].startswith('minicpm-v')
         )
     ]
 
@@ -176,14 +176,14 @@ def get_vision_models_list() -> List[str]:
     models_list = ['test']
 
     # Get the list of available models and filter out the ones that are not suitable
-    models = [model['name'] for model in ollama.list()['models'] 
+    models = [model['model'] for model in ollama.list()['models'] 
               if (
-                  model['name'].startswith('llava') or 
-                  model['name'].startswith('moondream') or 
-                  model['name'].startswith('GFalcon-UA/nous-hermes-2-vision') or
-                  model['name'].startswith('minicpm-v')
+                  model['model'].startswith('llava') or 
+                  model['model'].startswith('moondream') or 
+                  model['model'].startswith('GFalcon-UA/nous-hermes-2-vision') or
+                  model['model'].startswith('minicpm-v')
                 ) and
-              not re.search('embed', model['name'], re.IGNORECASE)]
+              not re.search('embed', model['model'], re.IGNORECASE)]
 
     # Remove the ":latest" suffix from the model names
     for index, model in enumerate(models):
