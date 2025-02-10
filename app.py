@@ -15,11 +15,10 @@ from PIL import Image
 from pydantic import BaseModel, Field, ValidationError
 
 
-from modules.prompts_system import prompt_system_chat, prompt_system_create, prompt_system_flux, prompt_system_vision
+from modules.prompts_system import prompt_system_chat, prompt_system_finetuned, prompt_system_create, prompt_system_flux, prompt_system_flux2, prompt_system_vision
 from modules.subjects import subjects
 from modules.version import version, isa_latest, ollama_version, ollama_latest, streamlit_version, strealit_latest, compare_version
 
-# print basedir
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
 PATH_OUTPUT = os.path.join(BASEDIR, "output")
 PATH_POSTIVE = os.path.join(PATH_OUTPUT, "prompts_positive.txt")
@@ -63,7 +62,7 @@ def load_settings() -> dict:
     if "model_vision" not in settings or settings["model_vision"] not in models_vision:
         settings["model_vision"] = None
     
-    if "prompt_mode" not in settings or settings["prompt_mode"] not in ["SDXL", "Flux"]:
+    if "prompt_mode" not in settings or settings["prompt_mode"] not in ["None", "SDXL", "Flux", "Flux2"]:
         settings["prompt_mode"] = "SDXL"
     
     if "mode" not in settings or not isinstance(settings["mode"], bool):
@@ -226,6 +225,11 @@ def get_prompt_system(generate_prompt: bool = True, prompt_model: str = 'SDXL') 
         elif prompt_model == 'Flux':
             schema = get_prompt_flux_schema()
             prompt_system = prompt_system_flux.replace(r'{schema}', schema)
+        elif prompt_model == 'Flux2':
+            schema = get_prompt_flux_schema()
+            prompt_system = prompt_system_flux2.replace(r'{schema}', schema)
+        elif prompt_model == 'None':
+            prompt_system = prompt_system_finetuned
         return prompt_system
     else:
         return prompt_system_chat
@@ -288,11 +292,15 @@ def get_prompts() -> tuple[BaseModel,str]:
     st.session_state['last_seed'] = calculate_seed(st.session_state['seed'])
 
     while True:
+        if st.session_state.prompt_mode == 'SDXL' or st.session_state.prompt_mode == 'Flux':
+            format = 'json'
+        else:
+            format = ''
         response = ollama.chat(
             model=st.session_state.model,
             messages=messages,
             stream=False,
-            format="json",
+            format=format,
             options={
                 "seed": st.session_state['last_seed'],
                 "temperature": st.session_state['temperature'],
@@ -304,9 +312,24 @@ def get_prompts() -> tuple[BaseModel,str]:
         try:
             if st.session_state.prompt_mode == 'SDXL':
                 prompts = PromptsList.model_validate_json(response['message']['content'])
-            elif st.session_state.prompt_mode == 'Flux':
+            elif st.session_state.prompt_mode == 'Flux' or st.session_state.prompt_mode == 'Flux2':
                 prompts = PromptsFluxList.model_validate_json(response['message']['content'])
-            st.session_state.response = prompts.model_dump_json()
+            elif st.session_state.prompt_mode == 'None':
+                prompts = response['message']['content']
+                prompts = {
+                    "prompts":
+                        [
+                            {"positive": prompts}
+                        ]
+                }
+            if (
+                st.session_state.prompt_mode == 'SDXL' or \
+                st.session_state.prompt_mode == 'Flux' or \
+                st.session_state.prompt_mode == 'Flux2'
+            ):
+                st.session_state.response = prompts.model_dump_json()
+            else:
+                st.session_state.response = json.dumps(prompts)
             return prompts, st.session_state.prompt_mode
         except ValidationError as e:
             attempt += 1
@@ -445,8 +468,17 @@ def display_prompts(prompts_list: PromptsList, output_error: bool = False, promp
     Returns:
         bool: True if prompts are found and displayed, False otherwise.
     """
+    
     try:        
-        for index, prompt in enumerate(prompts_list.prompts):
+        if prompt_mode == "SDXL" or prompt_mode == "Flux" or prompt_mode == "Flux2":
+            list_prompts = prompts_list.prompts
+        else:
+            list_prompts = prompts_list["prompts"]
+        for index, prompt in enumerate(list_prompts):
+            if prompt_mode == "SDXL" or prompt_mode == "Flux" or prompt_mode == "Flux2":
+                prompt_ = prompt.positive
+            else:
+                prompt_ = prompt["positive"]
             col_1, col_2 = st.columns((10, 1))
             with col_1:
                 st.write(f":green[Positive {index + 1}]", unsafe_allow_html=True)
@@ -454,12 +486,12 @@ def display_prompts(prompts_list: PromptsList, output_error: bool = False, promp
                 st.button(
                     ":material/content_copy:", 
                     on_click=copy_prompt, 
-                    args=[prompt.positive], 
+                    args=[prompt_], 
                     key=f"copy_{uuid.uuid4()}", 
                     use_container_width=True,
                     help="Copy positive prompt"
                 )                
-            st.write(f"{prompt.positive}", unsafe_allow_html=True)
+            st.write(f"{prompt_}", unsafe_allow_html=True)
             
             if prompt_mode == "SDXL":
                 col_1, col_2 = st.columns((10, 1))
@@ -485,7 +517,7 @@ def display_prompts(prompts_list: PromptsList, output_error: bool = False, promp
         print(e)
         # If JSON decoding fails, output an error message if output_error is True
         if output_error:
-            st.write("No prompts found. Aborded.")
+            st.write("No prompt found. Aborded.")
         return False
     
     except ValueError as e:
@@ -493,7 +525,7 @@ def display_prompts(prompts_list: PromptsList, output_error: bool = False, promp
         print(e)
         # Output an error message if output_error is True
         if output_error:
-            st.write("No prompts found. Aborded.")
+            st.write("No prompt found. Aborded.")
         return False
     
     except Exception as e:
@@ -501,7 +533,7 @@ def display_prompts(prompts_list: PromptsList, output_error: bool = False, promp
         print(e)
         # Output an error message if output_error is True
         if output_error:
-            st.write("No prompts found. Aborded.")
+            st.write("No prompt found. Aborded.")
         return False
 
 def reload_prompt(request: str) -> None:
@@ -726,7 +758,7 @@ with st.sidebar:
         )
         st.selectbox(
             "Mode", 
-            ["SDXL", "Flux"], 
+            ["None", "SDXL", "Flux", "Flux2"], 
             placeholder="Select a mode",
             key="prompt_mode",
             label_visibility="collapsed",
@@ -873,7 +905,6 @@ else:
 
                         with col_1:
                             st.button("Save", on_click=save_response, args=[st.session_state.response], key="save_response")
-                        
                         with col_2:
                             st.markdown(f"<p style='text-align: right; font-size: 14px; color: #CCCCCC'>Seed: {st.session_state['last_seed']} - Temperature: {st.session_state['temperature']}</p>", unsafe_allow_html=True)
             
