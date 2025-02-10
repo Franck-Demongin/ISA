@@ -1,10 +1,13 @@
-![isa_hero_0-2-9](https://github.com/user-attachments/assets/23bdf0e7-dbf3-412c-bcdb-5959f9197617)
+![isa_hero_0-3-0](https://github.com/user-attachments/assets/f8846f50-a596-41ac-a0ed-f1dc0d5359ae)
 
 <img src="https://img.shields.io/badge/Python-3.10-blue" /> <img src="https://img.shields.io/badge/Ollama-orange" /> <img src="https://img.shields.io/badge/Streamlit-blue" /> [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
 
 # ISA 
 
-**Version: 0.2.9**
+**Version: 0.3.0**
+
+| :exclamation:  Update ollama python to 0.4.1 version!   |
+|---------------------------------------------------------|
 
 ISA creates prompts to generate images with SDXL Stable Diffusion and Flux models. Thank's to Kunal Puri for the Flux's prompt system.
 It work locally with Ollama LLM model like Llam3 or Mistral. 
@@ -205,6 +208,12 @@ The second way save the prompts in _prompts_positive.txt_ and _prompts_negative.
 You can also copy individual prompts to the clipboard for easy use in the UI you're using.
 
 ## Changelog
+
+### 0.3.0 - 2024-11-26
+__Changer:__
+- Upadate ollama python version to 0.4.1
+- Update ISA to support this changes
+
 
 ### 0.2.9 - 2024-09-19
 __Changer:__
