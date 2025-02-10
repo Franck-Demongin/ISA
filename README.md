@@ -1,10 +1,10 @@
-![isa_hero_0-3-0](https://github.com/user-attachments/assets/f8846f50-a596-41ac-a0ed-f1dc0d5359ae)
+![isa_hero_0 3 1](https://github.com/user-attachments/assets/e39e2fde-8f39-449f-8c94-edfe17280988)
 
 <img src="https://img.shields.io/badge/Python-3.10-blue" /> <img src="https://img.shields.io/badge/Ollama-orange" /> <img src="https://img.shields.io/badge/Streamlit-blue" /> [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
 
 # ISA 
 
-**Version: 0.3.0**
+**Version: 0.3.1**
 
 | :exclamation:  Update ollama python to 0.4.1 version!   |
 |---------------------------------------------------------|
@@ -146,6 +146,9 @@ For example, you can start asking for 2 messages on a sports car in message mode
 
 When generating the prompt, ISA can use 2 modes: *SDXL* or *Flux*. The messages generated are slightly different, and there is no negative prompt with *Flux* mode.
 
+> **NEW**
+> Flux2, a new prompt system to create Flux prompt.
+
 **Seed and Temperature**
 
 _Temperature_ can be set to a value between 0 and 1. If set to 0, the model will conform to the request, at 1 it will take on more freedom (a little more creative).
@@ -208,6 +211,11 @@ The second way save the prompts in _prompts_positive.txt_ and _prompts_negative.
 You can also copy individual prompts to the clipboard for easy use in the UI you're using.
 
 ## Changelog
+
+### 0.3.1 - 2025-02-10
+__Changer:__
+- Add Flux2, a new prompt system for create Flux prompt
+
 
 ### 0.3.0 - 2024-11-26
 __Changer:__
