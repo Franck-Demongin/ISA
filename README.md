@@ -1,10 +1,10 @@
 ![isa_hero_0 3 1](https://github.com/user-attachments/assets/e39e2fde-8f39-449f-8c94-edfe17280988)
 
-<img src="https://img.shields.io/badge/Python-3.10-blue" /> <img src="https://img.shields.io/badge/Ollama-orange" /> <img src="https://img.shields.io/badge/Streamlit-blue" /> [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
+<img src="https://img.shields.io/badge/Python-3.10-blue" /> ![Static Badge](https://img.shields.io/badge/Ollama-0.5.13-blue) ![Static Badge](https://img.shields.io/badge/Streamlit-1.42.0-blue) [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-green.svg)](http://perso.crans.org/besson/LICENSE.html)
 
 # ISA 
 
-**Version: 0.3.1**
+**Version: 0.3.2**
 
 | :exclamation:  Update ollama python to 0.4.1 version!   |
 |---------------------------------------------------------|
@@ -144,10 +144,7 @@ For example, you can start asking for 2 messages on a sports car in message mode
 
 **Prompt SDXL or Flux**
 
-When generating the prompt, ISA can use 2 modes: *SDXL* or *Flux*. The messages generated are slightly different, and there is no negative prompt with *Flux* mode.
-
-> **NEW**
-> Flux2, a new prompt system to create Flux prompt.
+When generating the prompt, ISA can use 3 modes: *SDXL*, *Flux* or *Flux2*. The messages generated are slightly different, and there is no negative prompt with *Flux* mode.
 
 **Seed and Temperature**
 
@@ -182,9 +179,10 @@ ISA can create prompts from a given image.
 It uses the vision model to describe the image, then passes this description to the LLM responsible for generating the prompts.
 
 Load an image, select the vision model and ask your question. Redo the same image, use the style with a different subject, etc. ISA can be surprising!
+If you wish to see the vision response, check the *Show vision response* option.
 
 > ***NEW*** 
-> Display the response of the vision model.
+> Granite3.2-vision model added
 
 ### Reload and Edit input prompt
 
@@ -212,16 +210,18 @@ You can also copy individual prompts to the clipboard for easy use in the UI you
 
 ## Changelog
 
+### 0.3.2 - 2025-03-05
+__Changer:__
+- Add granite3.2-vision model
+
 ### 0.3.1 - 2025-02-10
 __Changer:__
 - Add Flux2, a new prompt system for create Flux prompt
-
 
 ### 0.3.0 - 2024-11-26
 __Changer:__
 - Upadate ollama python version to 0.4.1
 - Update ISA to support this changes
-
 
 ### 0.2.9 - 2024-09-19
 __Changer:__
