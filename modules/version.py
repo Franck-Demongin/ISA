@@ -1,7 +1,7 @@
 import requests
 import subprocess
 
-VERSION = '0.3.1'
+VERSION = '0.3.2'
 
 def compare_version(a: str, b: str) -> int:
     """

@@ -180,7 +180,8 @@ def get_vision_models_list() -> List[str]:
                   model['model'].startswith('llava') or 
                   model['model'].startswith('moondream') or 
                   model['model'].startswith('GFalcon-UA/nous-hermes-2-vision') or
-                  model['model'].startswith('minicpm-v')
+                  model['model'].startswith('minicpm-v') or
+                  model['model'].startswith('granite3.2-vision')
                 ) and
               not re.search('embed', model['model'], re.IGNORECASE)]
 
