@@ -295,7 +295,7 @@ def get_prompts() -> tuple[BaseModel,str]:
     st.session_state['last_seed'] = calculate_seed(st.session_state['seed'])
 
     while True:
-        if st.session_state.prompt_mode == 'SDXL' or st.session_state.prompt_mode == 'Flux':
+        if st.session_state.prompt_mode == 'SDXL' or st.session_state.prompt_mode == 'Flux' or st.session_state.prompt_mode == 'Flux2':
             format = 'json'
         else:
             format = ''

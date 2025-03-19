@@ -1,12 +1,12 @@
 ![isa_hero_0 3 1](https://github.com/user-attachments/assets/e39e2fde-8f39-449f-8c94-edfe17280988)
 
-<img src="https://img.shields.io/badge/Python-3.10-blue" /> ![Static Badge](https://img.shields.io/badge/Ollama-0.6.0-blue) ![Static Badge](https://img.shields.io/badge/Streamlit-1.42.0-blue) [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-green.svg)](http://perso.crans.org/besson/LICENSE.html)
+<img src="https://img.shields.io/badge/Python-3.10-blue" /> ![Static Badge](https://img.shields.io/badge/Ollama-0.6.2-blue) ![Static Badge](https://img.shields.io/badge/Streamlit-1.42.0-blue) [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-green.svg)](http://perso.crans.org/besson/LICENSE.html)
 
 # ISA
 
-**Version: 0.3.3**
+<img src="https://img.shields.io/badge/ISA-0.3.4-blue" />
 
-| :exclamation: Update ollama to 0.6.0 version to use gemma3 model |
+| :exclamation: Update ollama to 0.6.2 version to use gemma3 model |
 | ---------------------------------------------------------------- |
 
 ISA creates prompts to generate images with SDXL Stable Diffusion and Flux models. Thank's to Kunal Puri for the Flux's prompt system.
@@ -231,6 +231,16 @@ The second way save the prompts in _prompts_positive.txt_ and _prompts_negative.
 You can also copy individual prompts to the clipboard for easy use in the UI you're using.
 
 ## Changelog
+
+### 0.3.4 - 2025-03-19
+
+**Changer:**
+
+- Requires Ollama 0.6.2 to work with Gemma3
+
+**Bugfix:**
+
+- Bug fixed in Gemma3 response parsing
 
 ### 0.3.3 - 2025-03-14
 
