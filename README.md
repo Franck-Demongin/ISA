@@ -1,13 +1,13 @@
 ![isa_hero_0 3 1](https://github.com/user-attachments/assets/e39e2fde-8f39-449f-8c94-edfe17280988)
 
-<img src="https://img.shields.io/badge/Python-3.10-blue" /> ![Static Badge](https://img.shields.io/badge/Ollama-0.6.2-blue) ![Static Badge](https://img.shields.io/badge/Streamlit-1.42.0-blue) [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-green.svg)](http://perso.crans.org/besson/LICENSE.html)
+<img src="https://img.shields.io/badge/Python-3.10-blue" /> ![Static Badge](https://img.shields.io/badge/Ollama-0.6.5-blue) ![Static Badge](https://img.shields.io/badge/Streamlit-1.42.0-blue) [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-green.svg)](http://perso.crans.org/besson/LICENSE.html)
 
 # ISA
 
-<img src="https://img.shields.io/badge/ISA-0.3.4-blue" />
+<img src="https://img.shields.io/badge/ISA-0.3.5-blue" />
 
-| :exclamation: Update ollama to 0.6.2 version to use gemma3 model |
-| ---------------------------------------------------------------- |
+| :exclamation: Update ollama to 0.6.5 version to use mistral-small3.1 model vision |
+| --------------------------------------------------------------------------------- |
 
 ISA creates prompts to generate images with SDXL Stable Diffusion and Flux models. Thank's to Kunal Puri for the Flux's prompt system.
 It work locally with Ollama LLM model like Llam3 or Mistral.
@@ -137,6 +137,7 @@ For the vison model, you can get a try to :
 - _granite3.2-vision_
 - _llama3.2-vision_
 - _gemma3_
+- _mistral-small3.1_
 
 ## Usage
 
@@ -231,6 +232,12 @@ The second way save the prompts in _prompts_positive.txt_ and _prompts_negative.
 You can also copy individual prompts to the clipboard for easy use in the UI you're using.
 
 ## Changelog
+
+### 0.3.5 - 2025-04-07
+
+**Changer:**
+
+- Requires Ollama 0.6.5 to work with mistral-small3.1 vision model
 
 ### 0.3.4 - 2025-03-19
 
