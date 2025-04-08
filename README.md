@@ -1,4 +1,4 @@
-![isa_hero_0 3 1](https://github.com/user-attachments/assets/e39e2fde-8f39-449f-8c94-edfe17280988)
+![isa_hero_0 3 5](https://github.com/user-attachments/assets/f4a79fda-45bc-407e-b41a-cd72b1a0ad46)
 
 <img src="https://img.shields.io/badge/Python-3.10-blue" /> ![Static Badge](https://img.shields.io/badge/Ollama-0.6.5-blue) ![Static Badge](https://img.shields.io/badge/Streamlit-1.42.0-blue) [![GPLv3 license](https://img.shields.io/badge/License-GPLv3-green.svg)](http://perso.crans.org/besson/LICENSE.html)
 
@@ -233,7 +233,7 @@ You can also copy individual prompts to the clipboard for easy use in the UI you
 
 ## Changelog
 
-### 0.3.5 - 2025-04-07
+### 0.3.5 - 2025-04-08
 
 **Changer:**
 
