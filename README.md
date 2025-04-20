@@ -4,13 +4,20 @@
 
 # ISA
 
-<img src="https://img.shields.io/badge/ISA-0.3.5-blue" />
+<img src="https://img.shields.io/badge/ISA-0.3.6-blue" />
 
 | :exclamation: Update ollama to 0.6.5 version to use mistral-small3.1 model vision |
 | --------------------------------------------------------------------------------- |
 
 ISA creates prompts to generate images with SDXL Stable Diffusion and Flux models. Thank's to Kunal Puri for the Flux's prompt system.
 It work locally with Ollama LLM model like Llam3 or Mistral.
+
+:arrow_right: **0.3.6**: a new system prompt has been added **_Sequential_**.  
+It creates the final prompt based on the elements suggested and selected by the user.  
+Use it with templates such as Gemma3:12b or Cogito:14b.
+
+The prompt was originally developed by [lololerigolo60986](https://civitai.com/user/lololerigolo60986)  
+More info here:[how to create a local prompter on your computer for generative AI : Stable D, Midjourney, DALL-E](https://civitai.com/articles/13631)
 
 Here an example of prompt it can generate:
 
@@ -162,9 +169,12 @@ You can switch modes using the _Create prompt_ selector in the sidebar at any ti
 
 For example, you can start asking for 2 messages on a sports car in message mode, then switch to chat mode to reply to ISA on the messages generated.
 
-**Prompt SDXL or Flux**
+**Prompt SDXL, Flux or Sequential**
 
-When generating the prompt, ISA can use 3 modes: _SDXL_, _Flux_ or _Flux2_. The messages generated are slightly different, and there is no negative prompt with _Flux_ mode.
+When generating the prompt, ISA can use several modes: _SDXL_, _Flux_, _Flux2_ or _Sequential_. The messages generated are slightly different, and there is no negative prompt with _Flux_ mode.
+
+_Sequential_ mode is a new system prompt. It creates the final prompt based on the elements suggested and selected by the user.  
+Use it with models such as Gemma3:12b or Cogito:14b.
 
 **Seed and Temperature**
 
@@ -231,7 +241,15 @@ The second way save the prompts in _prompts_positive.txt_ and _prompts_negative.
 
 You can also copy individual prompts to the clipboard for easy use in the UI you're using.
 
+> :warning: Save and Copy prompts are not supported for **Sequential** prompts
+
 ## Changelog
+
+### 0.3.6 - 2025-04-20
+
+**Changer:**
+
+- Add support for **_Sequential_** prompt
 
 ### 0.3.5 - 2025-04-08
 

@@ -15,7 +15,15 @@ from PIL import Image
 from pydantic import BaseModel, Field, ValidationError
 
 
-from modules.prompts_system import prompt_system_chat, prompt_system_finetuned, prompt_system_create, prompt_system_flux, prompt_system_flux2, prompt_system_vision
+from modules.prompts_system import (
+    prompt_system_chat, 
+    prompt_system_finetuned, 
+    prompt_system_create, 
+    prompt_system_flux, 
+    prompt_system_flux2, 
+    prompt_system_lolo,
+    prompt_system_vision
+)
 from modules.subjects import subjects
 from modules.version import version, isa_latest, ollama_version, ollama_latest, streamlit_version, strealit_latest, compare_version
 
@@ -62,7 +70,7 @@ def load_settings() -> dict:
     if "model_vision" not in settings or settings["model_vision"] not in models_vision:
         settings["model_vision"] = None
     
-    if "prompt_mode" not in settings or settings["prompt_mode"] not in ["None", "SDXL", "Flux", "Flux2"]:
+    if "prompt_mode" not in settings or settings["prompt_mode"] not in ["None", "SDXL", "Flux", "Flux2", "Sequential"]:
         settings["prompt_mode"] = "SDXL"
     
     if "mode" not in settings or not isinstance(settings["mode"], bool):
@@ -232,6 +240,8 @@ def get_prompt_system(generate_prompt: bool = True, prompt_model: str = 'SDXL') 
         elif prompt_model == 'Flux2':
             schema = get_prompt_flux_schema()
             prompt_system = prompt_system_flux2.replace(r'{schema}', schema)
+        elif prompt_model == 'Sequential':
+            prompt_system = prompt_system_lolo
         elif prompt_model == 'None':
             prompt_system = prompt_system_finetuned
         return prompt_system
@@ -762,7 +772,7 @@ with st.sidebar:
         )
         st.selectbox(
             "Mode", 
-            ["None", "SDXL", "Flux", "Flux2"], 
+            ["None", "SDXL", "Flux", "Flux2", "Sequential"], 
             placeholder="Select a mode",
             key="prompt_mode",
             label_visibility="collapsed",
@@ -903,14 +913,17 @@ else:
         if st.session_state.mode:
             with st.chat_message("assistant"):
                 with st.spinner("Generating..."):
-                    prompts_list, mode = get_prompts()
-                    if display_prompts(prompts_list, output_error=True, prompt_mode=mode):
-                        col_1, col_2 = st.columns(2)
+                    if st.session_state.prompt_mode == 'Sequential':
+                        st.write_stream(stream_data)
+                    else:
+                        prompts_list, mode = get_prompts()
+                        if display_prompts(prompts_list, output_error=True, prompt_mode=mode):
+                            col_1, col_2 = st.columns(2)
 
-                        with col_1:
-                            st.button("Save", on_click=save_response, args=[st.session_state.response], key="save_response")
-                        with col_2:
-                            st.markdown(f"<p style='text-align: right; font-size: 14px; color: #CCCCCC'>Seed: {st.session_state['last_seed']} - Temperature: {st.session_state['temperature']}</p>", unsafe_allow_html=True)
+                            with col_1:
+                                st.button("Save", on_click=save_response, args=[st.session_state.response], key="save_response")
+                            with col_2:
+                                st.markdown(f"<p style='text-align: right; font-size: 14px; color: #CCCCCC'>Seed: {st.session_state['last_seed']} - Temperature: {st.session_state['temperature']}</p>", unsafe_allow_html=True)
             
         else:
             with st.chat_message("assistant"):
